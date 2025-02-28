@@ -9,10 +9,7 @@ public class AppDbContext : DbContext
     private readonly AuditInterceptor _auditInterceptor;
 
     public AppDbContext(DbContextOptions<AppDbContext> options, AuditInterceptor auditInterceptor)
-        : base(options)
-    {
-        _auditInterceptor = auditInterceptor;
-    }
+        : base(options) { _auditInterceptor = auditInterceptor; }
 
     #region Entities
     public DbSet<Article> Articles { get; set; }

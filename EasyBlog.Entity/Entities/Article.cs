@@ -4,7 +4,6 @@ namespace EasyBlog.Entity.Entities;
 
 public class Article : EntityBase
 {
-    public Guid Id { get; set; }
     public Guid CategoryId { get; set; }
     public Guid ImageId { get; set; }
 

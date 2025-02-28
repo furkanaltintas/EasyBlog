@@ -19,7 +19,7 @@ public abstract class EntityBase : IEntityBase
 
     // Ezme işlemi yapmayacağım için virtual kullanmadım
 
-    public Guid Id { get; private set; } = Guid.NewGuid(); // Private set, dışarıdan değiştirilmesini önler
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     public string CreatedBy { get; set; } = default!;
     public string? ModifiedBy { get; set; }
