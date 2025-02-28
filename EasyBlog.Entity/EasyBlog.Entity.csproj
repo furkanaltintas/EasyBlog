@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EasyBlog.Core\EasyBlog.Core.csproj" />
+  </ItemGroup>
+
 </Project>
