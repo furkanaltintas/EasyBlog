@@ -1,15 +1,14 @@
+using EasyBlog.Data.Context;
 using EasyBlog.Data.Extensions;
+using EasyBlog.Entity.Entities;
 using EasyBlog.Service.Extensions;
 using EasyBlog.Web.Middleware;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services
-    .AddControllersWithViews()
-    .AddRazorRuntimeCompilation();
 
-
+builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor(); // IHttpContextAccessor servisini ekliyoruz
 
 #region Extensions
@@ -17,15 +16,59 @@ builder.Services.LoadDataExtension(builder.Configuration);
 builder.Services.LoadServiceExtension();
 #endregion
 
+
+
+// Add services to the container.
+#region Controller
+builder.Services
+    .AddControllersWithViews()
+    .AddRazorRuntimeCompilation();
+#endregion
+
+
+#region Route
 builder.Services.Configure<RouteOptions>(options =>
 {
     options.LowercaseUrls = true; // Küçük harf zorunluluðu
     options.AppendTrailingSlash = false; // URL sonunda '/' ifadesi olmasýn
 });
+#endregion
+
+
+#region Identity & Cookie
+builder.Services.AddIdentity<AppUser, AppRole>(action =>
+{
+    action.Password.RequireNonAlphanumeric = false;
+    action.Password.RequireLowercase = false;
+    action.Password.RequireUppercase = false;
+})
+    .AddRoleManager<RoleManager<AppRole>>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
+
+// Kimlik Doðrulama çerezlerini özelleþtirme iþlemi
+builder.Services.ConfigureApplicationCookie(configure =>
+{
+    configure.LoginPath = new PathString("/Management/Auth/Login"); // Kullanýcýnýn kimliði doðrulanmamýþsa, login sayfasýna yönlendir.
+    configure.LogoutPath = new PathString("/Management/Auth/Logout"); // Kullanýcý sistemden çýkýþ yaptýðýnda, çýkýþ iþlemi bu url üzerinden yapýlýr
+    configure.Cookie = new CookieBuilder
+    {
+        Name = "EasyBlogCookie", // Çerezin adý tarayýcýda bu isimle saklanacak
+        HttpOnly = true, // Çerez yalnýzca sunucu tarafýndan okunabilir, JavaScript eriþemez ve XSS saldýrýlarýna karþý ek güvenlik saðlar.
+        SameSite = SameSiteMode.Strict, // Çerez, sadece ayný site içindeki isteklerle gönderilir. Üçüncü taraf sitelerden eriþim engellenir (CSRF saldýrýlarýna karþý güvenlik saðlar).
+        SecurePolicy = CookieSecurePolicy.SameAsRequest // Çerez, HTTPS isteklerinde güvenli olarak gönderilir, HTTP içinse duruma baðlýdýr. Eðer HTTPS kullanýlýyorsa çerez güvenli olur.
+    };
+    configure.SlidingExpiration = true; // Kullanýcý aktif oldukça çerez süresi uzar.
+    configure.ExpireTimeSpan = TimeSpan.FromDays(7); // Çerezin maksimum ömrünü belirler.
+    configure.AccessDeniedPath = new PathString("/Management/Auth/AccessDenied"); // Yetkisiz bir sayfaya eriþmeye çalýþan kullanýcý, bu sayfaya yönlendirilir.
+});
+#endregion
+
 
 var app = builder.Build();
 
-app.UseMiddleware<LowercaseUrlMiddleware>();
+app.UseMiddleware<LowercaseUrlMiddleware>(); // Küçük harf zorunluluðu
 
 
 // Configure the HTTP request pipeline.
@@ -37,9 +80,12 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseSession();
 app.UseRouting();
 
-app.UseAuthorization();
+app.UseAuthentication(); // Sisteme login oldu mu ?
+app.UseAuthorization(); // Yetkisi var mý ?
 
 app.MapStaticAssets();
 

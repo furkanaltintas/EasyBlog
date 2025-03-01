@@ -49,6 +49,7 @@ public class UserMap : IEntityTypeConfiguration<AppUser>
         var superAdmin = new AppUser
         {
             Id = Guid.Parse("4FCC7985-F39B-4C50-AD1C-ADE5D0DF8279"),
+            ImageId = Guid.Parse("B29B4E06-E84D-4BB2-B4D4-DC02725F8398"),
             UserName = "superadmin@gmail.com",
             NormalizedUserName = "SUPERADMIN@GMAIL.COM",
             Email = "superadmin@gmail.com",
@@ -66,6 +67,7 @@ public class UserMap : IEntityTypeConfiguration<AppUser>
         var admin = new AppUser
         {
             Id = Guid.Parse("330ADE9E-AE19-4376-9B14-FDFC3F71FB4C"),
+            ImageId = Guid.Parse("007D16D1-37D2-4400-943E-2452059151DE"),
             UserName = "admin@gmail.com",
             NormalizedUserName = "ADMIN@GMAIL.COM",
             Email = "admin@gmail.com",
