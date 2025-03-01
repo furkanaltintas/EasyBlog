@@ -10,6 +10,7 @@ public static class ServiceExtensions
     public static IServiceCollection LoadServiceExtension(this IServiceCollection services)
     {
         services.AddScoped<IArticleService, ArticleService>();
+        services.AddScoped<IAuthService, AuthService>();
 
         var assembly = Assembly.GetExecutingAssembly();
 
