@@ -1,5 +1,6 @@
 using EasyBlog.Data.Context;
 using EasyBlog.Data.Infrastructure.Interceptors;
+using EasyBlog.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
@@ -8,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-#region Data
+#region Connection
 builder.Services.AddHttpContextAccessor(); // IHttpContextAccessor servisini ekliyoruz
 builder.Services.AddScoped<AuditInterceptor>();
 
@@ -26,6 +27,7 @@ builder.Services.AddDbContext<AppDbContext>((serviceProvider, options) =>
 });
 #endregion
 
+builder.Services.LoadDataExtensions(builder.Configuration);
 
 var app = builder.Build();
 
