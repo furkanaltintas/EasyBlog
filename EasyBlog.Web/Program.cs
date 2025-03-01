@@ -1,32 +1,12 @@
-using EasyBlog.Data.Context;
-using EasyBlog.Data.Infrastructure.Interceptors;
 using EasyBlog.Data.Extensions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-#region Connection
+
 builder.Services.AddHttpContextAccessor(); // IHttpContextAccessor servisini ekliyoruz
-builder.Services.AddScoped<AuditInterceptor>();
-
-//builder.Services.AddDbContext<AppDbContext>(options =>
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-builder.Services.AddDbContext<AppDbContext>((serviceProvider, options) =>
-{
-    options
-    .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")) // Sql baðlantýsý
-    .ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning)); // PendingModelChangesWarning uyarýsýný bastýrmak
-
-    var auditInterceptor = serviceProvider.GetRequiredService<AuditInterceptor>();
-    options.AddInterceptors(auditInterceptor);
-});
-#endregion
-
 builder.Services.LoadDataExtensions(builder.Configuration);
 
 var app = builder.Build();
