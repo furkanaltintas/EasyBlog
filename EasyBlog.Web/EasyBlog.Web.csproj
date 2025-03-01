@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EasyBlog.Data\EasyBlog.Data.csproj" />
     <ProjectReference Include="..\EasyBlog.Service\EasyBlog.Service.csproj" />
   </ItemGroup>
 

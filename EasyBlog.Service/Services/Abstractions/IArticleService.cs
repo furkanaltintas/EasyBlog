@@ -1,8 +1,8 @@
-﻿using EasyBlog.Entity.Entities;
+﻿using EasyBlog.Entity.DTOs.Articles;
 
 namespace EasyBlog.Service.Services.Abstractions;
 
 public interface IArticleService
 {
-    Task<List<Article>> GetAllArticlesAsync();
+    Task<List<ArticleDto>> GetAllArticlesAsync();
 }

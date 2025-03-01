@@ -1,7 +1,5 @@
 using EasyBlog.Service.Services.Abstractions;
-using EasyBlog.Web.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace EasyBlog.Web.Controllers;
 
@@ -18,10 +16,5 @@ public class HomeController : Controller
     {
         var articles = await _articleService.GetAllArticlesAsync();
         return View(articles);
-    }
-
-    public async Task<IActionResult> Privacy()
-    {
-        return View();
     }
 }
