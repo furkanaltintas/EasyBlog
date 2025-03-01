@@ -32,7 +32,7 @@ public class Repository<T> : IRepository<T> where T : class, IEntityBase, new()
 
     public async Task<int> CountAsync(Expression<Func<T, bool>> predicate = null) => await Table.CountAsync(predicate);
 
-    public async Task<IEnumerable<T>> GetAllAsync(
+    public async Task<List<T>> GetAllAsync(
         Expression<Func<T, bool>> predicate = null,
         params Expression<Func<T, object>>[] includeProperties)
     {

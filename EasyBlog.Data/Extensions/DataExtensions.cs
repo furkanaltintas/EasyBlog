@@ -12,7 +12,7 @@ namespace EasyBlog.Data.Extensions;
 
 public static class DataExtensions
 {
-    public static IServiceCollection LoadDataExtensions(
+    public static IServiceCollection LoadDataExtension(
         this IServiceCollection services,
         IConfiguration configuration)
     {
