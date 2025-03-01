@@ -1,15 +1,32 @@
 using EasyBlog.Data.Extensions;
+using EasyBlog.Service.Extensions;
+using EasyBlog.Web.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services
+    .AddControllersWithViews()
+    .AddRazorRuntimeCompilation();
 
 
 builder.Services.AddHttpContextAccessor(); // IHttpContextAccessor servisini ekliyoruz
-builder.Services.LoadDataExtensions(builder.Configuration);
+
+#region Extensions
+builder.Services.LoadDataExtension(builder.Configuration);
+builder.Services.LoadServiceExtension();
+#endregion
+
+builder.Services.Configure<RouteOptions>(options =>
+{
+    options.LowercaseUrls = true; // Küçük harf zorunluluðu
+    options.AppendTrailingSlash = false; // URL sonunda '/' ifadesi olmasýn
+});
 
 var app = builder.Build();
+
+app.UseMiddleware<LowercaseUrlMiddleware>();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -26,10 +43,19 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
+#region Endpoints
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapAreaControllerRoute(
+        name: "Management",
+        areaName: "Management",
+        pattern: "management/{controller=home}/{action=Index}/{id?}");
+
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=home}/{action=Index}/{id?}");
+});
+#endregion
 
 
 app.Run();
