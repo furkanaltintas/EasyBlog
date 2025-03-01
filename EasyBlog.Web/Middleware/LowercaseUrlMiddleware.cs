@@ -1,4 +1,6 @@
-﻿namespace EasyBlog.Web.Middleware;
+﻿using Microsoft.AspNetCore.Http.Extensions;
+
+namespace EasyBlog.Web.Middleware;
 
 public class LowercaseUrlMiddleware
 {
@@ -11,13 +13,17 @@ public class LowercaseUrlMiddleware
 
     public async Task Invoke(HttpContext context)
     {
-        var request = context.Request;
-        var path = request.Path.Value;
+        string path = context.Request.Path.Value!;
 
         if (!string.IsNullOrEmpty(path) && path != path.ToLower())
         {
-            var lowerCaseUrl = request.Scheme + "://" + request.Host + request.PathBase + path.ToLower() + request.QueryString;
-            context.Response.Redirect(lowerCaseUrl, true); // 301 yönlendirme
+            string builder = new UriBuilder(context.Request.GetEncodedUrl())
+            {
+                Path = path.ToLower(),
+                Query = context.Request.QueryString.ToString()
+            }.ToString();
+
+            context.Response.Redirect(builder, true);
             return;
         }
 
