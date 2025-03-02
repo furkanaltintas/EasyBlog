@@ -8,7 +8,7 @@ namespace EasyBlog.Web.Areas.Management.Controllers;
 
 public class AuthController : BaseController
 {
-    public AuthController(IServiceManager serviceManager) : base(serviceManager) { }
+    public AuthController(IBaseService serviceManager) : base(serviceManager) { }
 
     [HttpGet]
     public IActionResult Login() => View();

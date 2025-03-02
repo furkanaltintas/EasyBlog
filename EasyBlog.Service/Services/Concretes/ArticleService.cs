@@ -7,7 +7,7 @@ using EasyBlog.Entity.DTOs.Categories;
 
 namespace EasyBlog.Service.Services.Concretes;
 
-public class ArticleService : BaseService, IArticleService
+public class ArticleService : RepositoryService, IArticleService
 {
     private readonly ICurrentUserService _currentUserService;
 

@@ -2,10 +2,12 @@
 using EasyBlog.Core.Enums;
 using EasyBlog.Entity.DTOs.Articles;
 using EasyBlog.Entity.DTOs.Categories;
+using EasyBlog.Entity.Entities;
+using EasyBlog.Service.Extensions;
 using EasyBlog.Service.Services.Managers;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace EasyBlog.Web.Areas.Management.Controllers;
 
@@ -13,7 +15,9 @@ namespace EasyBlog.Web.Areas.Management.Controllers;
 [Route("yonetim")]
 public class ArticleController : BaseController
 {
-    public ArticleController(IServiceManager serviceManager) : base(serviceManager) { }
+    private readonly IValidator<ArticleAddDto> _validator;
+
+    public ArticleController(IBaseService serviceManager, IValidator<ArticleAddDto> validator) : base(serviceManager) { _validator = validator; }
 
 
     [Route("makaleler")]
@@ -35,8 +39,11 @@ public class ArticleController : BaseController
     [HttpPost("ekleme")]
     public async Task<IActionResult> Add(ArticleAddDto articleAddDto)
     {
-        if (!ModelState.IsValid)
+        var result = await _validator.ValidateAsync(articleAddDto);
+
+        if (!result.IsValid)
         {
+            result.AddToModelState(ModelState);
             articleAddDto.Categories = await _serviceManager.CategoryService.GetAllCategoriesNonDeletedAsync();
             return View(articleAddDto);
         }

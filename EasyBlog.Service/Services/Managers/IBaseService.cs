@@ -2,7 +2,7 @@
 
 namespace EasyBlog.Service.Services.Managers;
 
-public interface IServiceManager
+public interface IBaseService
 {
     IAuthService AuthService { get; }
     IArticleService ArticleService { get; }

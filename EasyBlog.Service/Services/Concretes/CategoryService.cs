@@ -6,7 +6,7 @@ using EasyBlog.Service.Services.Abstractions;
 
 namespace EasyBlog.Service.Services.Concretes;
 
-public class CategoryService : BaseService, ICategoryService
+public class CategoryService : RepositoryService, ICategoryService
 {
     public CategoryService(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork) { }
 

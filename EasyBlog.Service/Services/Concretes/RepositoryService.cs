@@ -3,12 +3,12 @@ using EasyBlog.Data.UnitOfWorks;
 
 namespace EasyBlog.Service.Services.Concretes;
 
-public abstract class BaseService
+public abstract class RepositoryService
 {
     protected readonly IMapper _mapper;
     protected readonly IUnitOfWork _unitOfWork;
 
-    protected BaseService(IMapper mapper, IUnitOfWork unitOfWork)
+    protected RepositoryService(IMapper mapper, IUnitOfWork unitOfWork)
     {
         _mapper = mapper;
         _unitOfWork = unitOfWork;

@@ -2,9 +2,9 @@
 
 namespace EasyBlog.Service.Services.Managers;
 
-public class ServiceManager : IServiceManager
+public class BaseService : IBaseService
 {
-    public ServiceManager(
+    public BaseService(
         IAuthService authService,
         IArticleService articleService,
         ICategoryService categoryService)

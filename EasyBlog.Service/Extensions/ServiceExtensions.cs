@@ -1,24 +1,36 @@
-﻿using EasyBlog.Service.Services.Abstractions;
-using EasyBlog.Service.Services.Concretes;
-using EasyBlog.Service.Services.Managers;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace EasyBlog.Service.Extensions;
 
 public static class ServiceExtensions
 {
-    public static IServiceCollection LoadServiceExtension(this IServiceCollection services)
+    public static void AddAssemblyServices(this IServiceCollection services, Assembly assembly)
     {
-        services.AddScoped<IAuthService, AuthService>();
-        services.AddScoped<IArticleService, ArticleService>();
-        services.AddScoped<ICategoryService, CategoryService>();
-        services.AddScoped<ICurrentUserService, CurrentUserService>();
+        var allTypes = assembly.GetExportedTypes(); // // Derlemeden tüm erişilebilir tipleri bir defa al
 
 
-        services.AddScoped<IServiceManager, ServiceManager>();
+        // Hizmet tiplerini filtrelemeye yarar
+        var serviceTypes = allTypes
+            .Where(p => p.IsInterface && !p.IsClass && p.Name.StartsWith("I") && p.Name.EndsWith("Service"))
+            .ToList();
 
-        services.AddAutoMapper(Assembly.GetExecutingAssembly());
-        return services;
+        foreach (var serviceType in serviceTypes)
+        {
+            // İlgili yönetici tipini almaya yarıyor
+            var managerTypeName = GetManagerTypeName(serviceType);
+            var managerType = allTypes.FirstOrDefault(t => t.Name == managerTypeName);
+
+            // Yönetici tipi bulunduysa, servisi ekle
+            if (managerType != null)
+                services.AddScoped(serviceType, managerType);
+        }
+    }
+
+    // Manager tipinin adını elde etme
+    private static string GetManagerTypeName(Type serviceType)
+    {
+        // // İsimdeki ilk 'I' harfini kaldırır
+        return serviceType.Name.Substring(1); // 'I' harfi çıkar, örneğin "IAuthService" -> "AuthService"
     }
 }

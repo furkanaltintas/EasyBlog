@@ -11,27 +11,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor(); // IHttpContextAccessor servisini ekliyoruz
 
+
 #region Extensions
 builder.Services.LoadDataExtension(builder.Configuration);
 builder.Services.LoadServiceExtension();
-#endregion
-
-
-
-// Add services to the container.
-#region Controller
-builder.Services
-    .AddControllersWithViews()
-    .AddRazorRuntimeCompilation();
-#endregion
-
-
-#region Route
-builder.Services.Configure<RouteOptions>(options =>
-{
-    options.LowercaseUrls = true; // Küçük harf zorunluluðu
-    options.AppendTrailingSlash = false; // URL sonunda '/' ifadesi olmasýn
-});
 #endregion
 
 

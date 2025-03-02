@@ -6,7 +6,7 @@ namespace EasyBlog.Web.Areas.Management.Controllers;
 [Area("Management")]
 public class BaseController : Controller
 {
-    protected readonly IServiceManager _serviceManager;
+    protected readonly IBaseService _serviceManager;
 
-    public BaseController(IServiceManager serviceManager) { _serviceManager = serviceManager; }
+    public BaseController(IBaseService serviceManager) { _serviceManager = serviceManager; }
 }
