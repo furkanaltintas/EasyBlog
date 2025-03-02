@@ -32,9 +32,7 @@ public class Repository<T> : IRepository<T> where T : class, IEntityBase, new()
 
     public async Task<int> CountAsync(Expression<Func<T, bool>> predicate = null) => await Table.CountAsync(predicate);
 
-    public async Task<List<T>> GetAllAsync(
-        Expression<Func<T, bool>> predicate = null,
-        params Expression<Func<T, object>>[] includeProperties)
+    public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null, params Expression<Func<T, object>>[] includeProperties)
     {
         IQueryable<T> query = Table;
         if (predicate != null)
@@ -51,7 +49,6 @@ public class Repository<T> : IRepository<T> where T : class, IEntityBase, new()
     {
         NullException(entity);
         await Table.AddAsync(entity);
-        await SaveChangesAsync();
     }
 
     public async Task<T> UpdateAsync(T entity)
@@ -65,13 +62,7 @@ public class Repository<T> : IRepository<T> where T : class, IEntityBase, new()
     {
         NullException(entity);
         await Task.Run(() => Table.Remove(entity));
-        await SaveChangesAsync();
     }
 
-    public void NullException(T entity)
-    {
-        if (entity == null) throw new ArgumentNullException(nameof(entity));
-    }
-
-    public async Task SaveChangesAsync() => await _dbContext.SaveChangesAsync();
+    public void NullException(T entity) { if (entity == null) throw new ArgumentNullException(nameof(entity)); }
 }

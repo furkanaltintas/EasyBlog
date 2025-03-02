@@ -1,5 +1,6 @@
 ﻿using EasyBlog.Service.Services.Abstractions;
 using EasyBlog.Service.Services.Concretes;
+using EasyBlog.Service.Services.Managers;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -9,12 +10,15 @@ public static class ServiceExtensions
 {
     public static IServiceCollection LoadServiceExtension(this IServiceCollection services)
     {
-        services.AddScoped<IArticleService, ArticleService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IArticleService, ArticleService>();
+        services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
 
-        var assembly = Assembly.GetExecutingAssembly();
 
-        services.AddAutoMapper(assembly);
+        services.AddScoped<IServiceManager, ServiceManager>();
+
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
         return services;
     }
 }

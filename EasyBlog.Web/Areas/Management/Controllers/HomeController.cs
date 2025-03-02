@@ -16,6 +16,7 @@ public class HomeController : Controller
         _articleService = articleService;
     }
 
+    [Route("")]
     public async Task<IActionResult> Index()
     {
         var articles = await _articleService.GetAllArticlesWithCategoryNonDeletedAsync();
