@@ -4,6 +4,7 @@ using EasyBlog.Entity.Entities;
 using EasyBlog.Service.Extensions;
 using EasyBlog.Web.Middleware;
 using Microsoft.AspNetCore.Identity;
+using NToastNotify;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor(); // IHttpContextAccessor servisini ekliyoruz
 
+builder.Services
+    .AddControllersWithViews()
+    .AddNToastNotifyToastr(new()
+    {
+        PositionClass = ToastPositions.TopRight,
+        Title = "Baþarýlý Ýþlem!",
+        TimeOut = 5000,
+        ProgressBar = true,
+        CloseButton = true
+    })
+    .AddRazorRuntimeCompilation();
 
 #region Extensions
 builder.Services.LoadDataExtension(builder.Configuration);
@@ -61,6 +73,9 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.UseNToastNotify();
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

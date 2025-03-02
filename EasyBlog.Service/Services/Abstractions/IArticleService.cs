@@ -1,19 +1,20 @@
-﻿using EasyBlog.Entity.DTOs.Articles;
+﻿using EasyBlog.Core.Utilities.Results.Abstract;
+using EasyBlog.Entity.DTOs.Articles;
 
 namespace EasyBlog.Service.Services.Abstractions;
 
 public interface IArticleService
 {
-    Task SafeDeleteArticleAsync(Guid articleId);
+    Task<IResult> SafeDeleteArticleAsync(Guid articleId);
 
-    Task CreateArticleAsync(ArticleAddDto articleAddDto);
+    Task<IResult> CreateArticleAsync(ArticleAddDto articleAddDto);
 
-    Task<ArticleUpdateDto> GetArticleForUpdateAsync(Guid articleId);
+    Task<IDataResult<ArticleUpdateDto>> GetArticleForUpdateAsync(Guid articleId);
 
-    Task<bool> UpdateArticleAsync(ArticleUpdateDto articleUpdateDto);
+    Task<IDataResult<ArticleUpdateDto>> UpdateArticleAsync(ArticleUpdateDto articleUpdateDto);
 
 
-    Task<ArticleDto> GetArticleWithCategoryNonDeletedAsync(Guid articleId);
+    Task<IDataResult<ArticleDto>> GetArticleWithCategoryNonDeletedAsync(Guid articleId);
 
-    Task<List<ArticleListDto>> GetAllArticlesWithCategoryNonDeletedAsync();
+    Task<IDataResult<List<ArticleListDto>>> GetAllArticlesWithCategoryNonDeletedAsync();
 }

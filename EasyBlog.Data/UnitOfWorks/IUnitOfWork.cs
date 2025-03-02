@@ -1,4 +1,4 @@
-﻿using EasyBlog.Core.Entities;
+﻿using EasyBlog.Core.Entities.Abstract;
 using EasyBlog.Data.Repositories.Abstractions;
 
 namespace EasyBlog.Data.UnitOfWorks;

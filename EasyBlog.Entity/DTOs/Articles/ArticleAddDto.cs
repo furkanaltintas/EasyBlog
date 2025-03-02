@@ -1,4 +1,4 @@
-﻿using EasyBlog.Core.Entities;
+﻿using EasyBlog.Core.Entities.Abstract;
 using EasyBlog.Entity.DTOs.Categories;
 
 namespace EasyBlog.Entity.DTOs.Articles;

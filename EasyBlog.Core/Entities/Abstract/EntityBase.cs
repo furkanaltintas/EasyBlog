@@ -1,4 +1,4 @@
-﻿namespace EasyBlog.Core.Entities;
+﻿namespace EasyBlog.Core.Entities.Abstract;
 
 public abstract class EntityBase : IEntityBase
 {

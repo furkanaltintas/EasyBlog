@@ -1,4 +1,4 @@
-﻿using EasyBlog.Core.Entities;
+﻿using EasyBlog.Core.Entities.Abstract;
 using System.Linq.Expressions;
 
 namespace EasyBlog.Data.Repositories.Abstractions;
