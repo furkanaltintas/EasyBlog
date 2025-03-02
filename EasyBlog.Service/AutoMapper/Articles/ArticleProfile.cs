@@ -9,5 +9,6 @@ public class ArticleProfile : Profile
     public ArticleProfile()
     {
         CreateMap<ArticleDto, Article>().ReverseMap();
+        CreateMap<ArticleListDto, Article>().ReverseMap();
     }
 }

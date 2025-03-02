@@ -19,10 +19,10 @@ public class ArticleService : IArticleService
 
 
 
-    public async Task<List<ArticleDto>> GetAllArticlesAsync()
+    public async Task<List<ArticleListDto>> GetAllArticlesWithCategoryNonDeletedAsync()
     {
-        var articles = await _unitOfWork.GetRepository<Article>().GetAllAsync();
-        var articleDtos = _mapper.Map<List<ArticleDto>>(articles);
+        var articles = await _unitOfWork.GetRepository<Article>().GetAllAsync(a => !a.IsDeleted, a => a.Category);
+        var articleDtos = _mapper.Map<List<ArticleListDto>>(articles);
         return articleDtos;
     }
 }

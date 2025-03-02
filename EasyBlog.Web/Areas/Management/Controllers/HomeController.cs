@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EasyBlog.Web.Areas.Management.Controllers;
 
-[Area("Management")]
 [Authorize]
+[Route("yonetim")]
+[Area("Management")]
 public class HomeController : Controller
 {
     private readonly IArticleService _articleService;
@@ -17,7 +18,7 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var articles = await _articleService.GetAllArticlesAsync();
+        var articles = await _articleService.GetAllArticlesWithCategoryNonDeletedAsync();
         return View(articles);
     }
 }
