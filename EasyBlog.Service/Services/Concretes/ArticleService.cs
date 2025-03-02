@@ -9,18 +9,17 @@ namespace EasyBlog.Service.Services.Concretes;
 
 public class ArticleService : BaseService, IArticleService
 {
-    public ArticleService(IMapper mapper, IUnitOfWork unitOfWork) : base(mapper, unitOfWork) { }
+    private readonly ICurrentUserService _currentUserService;
+
+    public ArticleService(IMapper mapper, IUnitOfWork unitOfWork, ICurrentUserService currentUserService) : base(mapper, unitOfWork)
+    {
+        _currentUserService = currentUserService;
+    }
 
     public async Task CreateArticleAsync(ArticleAddDto articleAddDto)
     {
-        // Interceptor içerisinde yapılıyor
-        //var userId = _currentUserService.GetCurrentUserId();
-        //if (userId == Guid.Empty)
-        //    throw new UnauthorizedAccessException("Kullanıcı kimliği bulunamadı");
-
-
-
         var article = _mapper.Map<Article>(articleAddDto);
+        article.UserId = _currentUserService.GetCurrentUserId();
 
         await _unitOfWork.GetRepository<Article>().AddAsync(article);
         await _unitOfWork.SaveAsync();
@@ -70,7 +69,7 @@ public class ArticleService : BaseService, IArticleService
     }
 
 
-
+    // Get
     private async Task<Article> GetArticleAsync(Guid articleId) =>
         await _unitOfWork.GetRepository<Article>().GetAsync(a => !a.IsDeleted && a.Id == articleId, a => a.Category);
 }

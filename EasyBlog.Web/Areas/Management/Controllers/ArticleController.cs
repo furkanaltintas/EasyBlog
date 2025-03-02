@@ -54,7 +54,7 @@ public class ArticleController : BaseController
     }
 
 
-    [HttpPost]
+    [HttpPost("guncelleme/{articleId:guid}")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Update(ArticleUpdateDto articleUpdateDto, Guid articleId)
     {
@@ -77,7 +77,7 @@ public class ArticleController : BaseController
     [Route("silme")]
     public async Task<IActionResult> Delete(Guid articleId)
     {
-        await _serviceManager.ArticleService.SoftDeleteArticleAsync(articleId);
+        await _serviceManager.ArticleService.SafeDeleteArticleAsync(articleId);
         return RedirectToAction(nameof(Index));
     }
 

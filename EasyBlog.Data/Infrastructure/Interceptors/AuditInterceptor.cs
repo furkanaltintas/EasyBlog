@@ -29,21 +29,21 @@ public class AuditInterceptor : SaveChangesInterceptor
 
     private void ApplyAuditInformation(DbContext context)
     {
-        string currentUser = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Name)?.Value ?? "System";
+        string currentUserName = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Name)?.Value ?? "System";
 
         foreach (var entry in context.ChangeTracker.Entries<EntityBase>())
         {
             switch (entry.State)
             {
                 case EntityState.Added:
-                    entry.Entity.CreatedBy = currentUser;
+                    entry.Entity.CreatedBy = currentUserName;
                     break;
                 case EntityState.Modified:
-                    entry.Entity.ModifiedBy = currentUser;
+                    entry.Entity.ModifiedBy = currentUserName;
                     entry.Entity.ModifiedDate = DateTime.UtcNow;
                     break;
                 case EntityState.Deleted:
-                    entry.Entity.MarkAsDeleted(currentUser);
+                    entry.Entity.MarkAsDeleted(currentUserName);
                     entry.State = EntityState.Modified; // Soft delete uygula
                     break;
             }
