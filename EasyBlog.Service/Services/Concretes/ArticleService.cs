@@ -45,15 +45,20 @@ public class ArticleService : BaseService, IArticleService
         return articleUpdateDto;
     }
 
-    public async Task<ArticleDto> GetArticleWithCategoryNonDeletedAsync(Guid articleId)
+    public async Task<ArticleDto> GetArticleWithCategoryNonDeletedAsync(Guid articleId) =>
+        _mapper.Map<ArticleDto>(await GetArticleAsync(articleId));
+
+    public async Task SafeDeleteArticleAsync(Guid articleId)
     {
-        var article = await _unitOfWork.GetRepository<Article>().GetAsync(a => !a.IsDeleted && a.Id == articleId, a => a.Category);
-        return _mapper.Map<ArticleDto>(article);
+        var article = await GetArticleAsync(articleId);
+
+        await _unitOfWork.GetRepository<Article>().DeleteAsync(article);
+        await _unitOfWork.SaveAsync();
     }
 
     public async Task<bool> UpdateArticleAsync(ArticleUpdateDto articleUpdateDto)
     {
-        var article = await _unitOfWork.GetRepository<Article>().GetAsync(a => !a.IsDeleted && a.Id == articleUpdateDto.Id, a => a.Category);
+        var article = await GetArticleAsync(articleUpdateDto.Id);
 
         if (article == null)
             return false;
@@ -63,4 +68,9 @@ public class ArticleService : BaseService, IArticleService
         await _unitOfWork.SaveAsync();
         return true;
     }
+
+
+
+    private async Task<Article> GetArticleAsync(Guid articleId) =>
+        await _unitOfWork.GetRepository<Article>().GetAsync(a => !a.IsDeleted && a.Id == articleId, a => a.Category);
 }

@@ -28,7 +28,7 @@ public abstract class EntityBase : IEntityBase
     public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
     public DateTime? ModifiedDate { get; set; }
     public DateTime? DeletedDate { get; set; }
-    public bool IsDeleted { get; private set; } = false;
+    public bool IsDeleted { get; set; } = false;
 
 
     public void MarkAsDeleted(string deletedBy)
@@ -36,5 +36,6 @@ public abstract class EntityBase : IEntityBase
         IsDeleted = true;
         DeletedBy = deletedBy;
         DeletedDate = DateTime.UtcNow;
+        ModifiedDate = DateTime.UtcNow;
     }
 }
