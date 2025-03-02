@@ -2,7 +2,6 @@
 using EasyBlog.Data.Context;
 using EasyBlog.Data.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Linq.Expressions;
 
 namespace EasyBlog.Data.Repositories.Concretes;

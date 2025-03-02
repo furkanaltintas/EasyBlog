@@ -29,7 +29,7 @@ public class AuditInterceptor : SaveChangesInterceptor
 
     private void ApplyAuditInformation(DbContext context)
     {
-        string currentUser = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "System";
+        string currentUser = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Name)?.Value ?? "System";
 
         foreach (var entry in context.ChangeTracker.Entries<EntityBase>())
         {

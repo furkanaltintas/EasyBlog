@@ -1,4 +1,6 @@
-﻿using EasyBlog.Entity.DTOs.Articles;
+﻿using EasyBlog.Core.Entities;
+using EasyBlog.Core.Enums;
+using EasyBlog.Entity.DTOs.Articles;
 using EasyBlog.Service.Services.Managers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +21,7 @@ public class ArticleController : BaseController
     }
 
     [Route("ekleme")]
-    public async Task<IActionResult> Add() => View(PrepareArticleAddDtoAsync().Result);
+    public IActionResult Add() => View(PrepareArticleAddAndUpdateDtoAsync(TransactionType.Add).Result);
 
 
     [HttpPost("ekleme")]
@@ -35,12 +37,60 @@ public class ArticleController : BaseController
         return RedirectToAction("Index");
     }
 
-
-    private async Task<ArticleAddDto> PrepareArticleAddDtoAsync()
+    [Route("guncelleme/{articleId:guid}")]
+    public async Task<IActionResult> Update(Guid articleId)
     {
-        return new ArticleAddDto
+        var articleUpdateDto = await _serviceManager.ArticleService.GetArticleForUpdateAsync(articleId);
+        return View(articleUpdateDto);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [Route("guncelleme/{articleId:guid}")]
+    public async Task<IActionResult> Update(ArticleUpdateDto articleUpdateDto, Guid articleId)
+    {
+        if (!ModelState.IsValid)
         {
-            Categories = await _serviceManager.CategoryService.GetAllCategoriesNonDeletedAsync()
-        };
+            return View(PrepareArticleAddAndUpdateDtoAsync(TransactionType.Update, articleUpdateDto));
+        }
+
+        articleUpdateDto.Id = articleId;
+        var updateResult = await _serviceManager.ArticleService.UpdateArticleAsync(articleUpdateDto);
+
+        if (updateResult)
+        {
+            return RedirectToAction("Index");
+        }
+
+        ModelState.AddModelError(string.Empty, "Makale güncellenmedi. Lütfen tekrar deneyin.");
+        return View(PrepareArticleAddAndUpdateDtoAsync(TransactionType.Update, articleUpdateDto));
+    }
+
+    [Route("silme")]
+    public IActionResult Delete(Guid articleId)
+    {
+        return View();
+    }
+
+
+    private async Task<IDto> PrepareArticleAddAndUpdateDtoAsync(TransactionType type, ArticleUpdateDto? articleUpdateDto = null)
+    {
+        var categories = await _serviceManager.CategoryService.GetAllCategoriesNonDeletedAsync();
+
+        switch (type)
+        {
+            case TransactionType.Add:
+                return new ArticleAddDto
+                {
+                    Categories = categories
+                };
+            case TransactionType.Update:
+            default:
+                if (articleUpdateDto == null)
+                    throw new ArgumentNullException(nameof(articleUpdateDto), "ArticleUpdateDto cannot be null when updating an article.");
+
+                articleUpdateDto.Categories = categories;
+                return articleUpdateDto;
+        }
     }
 }

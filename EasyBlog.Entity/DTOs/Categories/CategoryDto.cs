@@ -1,6 +1,8 @@
-﻿namespace EasyBlog.Entity.DTOs.Categories;
+﻿using EasyBlog.Core.Entities;
 
-public class CategoryDto
+namespace EasyBlog.Entity.DTOs.Categories;
+
+public class CategoryDto : IDto
 {
     public Guid Id { get; set; }
     public string Name { get; set; }

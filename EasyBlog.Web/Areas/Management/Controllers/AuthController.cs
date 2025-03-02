@@ -1,36 +1,26 @@
 ﻿using EasyBlog.Entity.DTOs.Users;
-using EasyBlog.Entity.Entities;
 using EasyBlog.Service.Services.Abstractions;
+using EasyBlog.Service.Services.Managers;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EasyBlog.Web.Areas.Management.Controllers;
 
-[Area("Management")]
-public class AuthController : Controller
+public class AuthController : BaseController
 {
-    private readonly IAuthService _authService;
-
-    public AuthController(IAuthService authService)
-    {
-        _authService = authService;
-    }
+    public AuthController(IServiceManager serviceManager) : base(serviceManager) { }
 
     [HttpGet]
-    public IActionResult Login()
-    {
-        return View();
-    }
+    public IActionResult Login() => View();
 
-    [AllowAnonymous]
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> Login(UserLoginDto userLoginDto)
     {
         if (!ModelState.IsValid)
             return View();
 
-        var result = await _authService.LoginAsync(userLoginDto);
+        var result = await _serviceManager.AuthService.LoginAsync(userLoginDto);
 
         if (result.Success)
             return RedirectToAction("Index", "Home", new { Area = "Management" });
@@ -39,12 +29,11 @@ public class AuthController : Controller
         return View();
     }
 
-
-    [Authorize]
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> Logout()
     {
-        await _authService.Logout();
+        await _serviceManager.AuthService.Logout();
         HttpContext.Session.Clear();
 
         return RedirectToAction("Index", "Home", new { Area = "" });

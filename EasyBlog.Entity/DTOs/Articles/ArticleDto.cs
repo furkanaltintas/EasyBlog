@@ -1,6 +1,8 @@
-﻿namespace EasyBlog.Entity.DTOs.Articles;
+﻿using EasyBlog.Core.Entities;
 
-public class ArticleDto
+namespace EasyBlog.Entity.DTOs.Articles;
+
+public class ArticleDto : IDto
 {
     public Guid Id { get; set; }
     public string Title { get; set; }

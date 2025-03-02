@@ -1,8 +1,9 @@
-﻿using EasyBlog.Entity.DTOs.Categories;
+﻿using EasyBlog.Core.Entities;
+using EasyBlog.Entity.DTOs.Categories;
 
 namespace EasyBlog.Entity.DTOs.Articles;
 
-public class ArticleListDto
+public class ArticleListDto : IDto
 {
     public Guid Id { get; set; }
     public string Title { get; set; }

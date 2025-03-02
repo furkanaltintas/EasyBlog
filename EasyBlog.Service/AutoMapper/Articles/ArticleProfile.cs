@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using EasyBlog.Entity.DTOs.Articles;
 using EasyBlog.Entity.Entities;
+using EasyBlog.Entity.DTOs.Articles;
 
 namespace EasyBlog.Service.AutoMapper.Articles;
 
@@ -11,5 +11,6 @@ public class ArticleProfile : Profile
         CreateMap<ArticleDto, Article>().ReverseMap();
         CreateMap<ArticleAddDto, Article>().ReverseMap();
         CreateMap<ArticleListDto, Article>().ReverseMap();
+        CreateMap<ArticleUpdateDto, Article>().ReverseMap();
     }
 }

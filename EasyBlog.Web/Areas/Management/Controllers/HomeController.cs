@@ -1,5 +1,4 @@
-﻿using EasyBlog.Service.Services.Abstractions;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EasyBlog.Web.Areas.Management.Controllers;
@@ -9,17 +8,9 @@ namespace EasyBlog.Web.Areas.Management.Controllers;
 [Area("Management")]
 public class HomeController : Controller
 {
-    private readonly IArticleService _articleService;
-
-    public HomeController(IArticleService articleService)
-    {
-        _articleService = articleService;
-    }
-
     [Route("")]
     public async Task<IActionResult> Index()
     {
-        var articles = await _articleService.GetAllArticlesWithCategoryNonDeletedAsync();
-        return View(articles);
+        return View();
     }
 }

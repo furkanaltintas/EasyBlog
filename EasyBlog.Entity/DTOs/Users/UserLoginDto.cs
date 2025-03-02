@@ -1,6 +1,8 @@
-﻿namespace EasyBlog.Entity.DTOs.Users;
+﻿using EasyBlog.Core.Entities;
 
-public class UserLoginDto
+namespace EasyBlog.Entity.DTOs.Users;
+
+public class UserLoginDto : IDto
 {
     public string Email { get; set; }
     public string Password { get; set; }
