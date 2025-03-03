@@ -20,7 +20,7 @@ public static class Messages
 
         public static string NotFoundById(Guid articleId)
         {
-            return $"{articleId} makale koduna ait bir makale bulunamadı.";
+            return $"{articleId} koduna ait bir makale bulunamadı.";
         }
 
         public static string Add(string articleTitle)
@@ -46,6 +46,45 @@ public static class Messages
         public static string UndoDelete(string articleTitle)
         {
             return $"{articleTitle} adlı makale başarıyla arşivden geri getirilmiştir.";
+        }
+    }
+
+    public static class Category
+    {
+        public static string NotFound(bool isPlural)
+        {
+            if (isPlural) return "Hiç bir makale bulunamadı";
+            return "Böyle bir makale bulunamadı";
+        }
+
+        public static string NotFoundById(Guid categoryId)
+        {
+            return $"{categoryId} koduna ait bir başlık bulunamadı.";
+        }
+
+        public static string Add(string name)
+        {
+            return $"{name} adlı başlık başarıyla eklenmiştir.";
+        }
+
+        public static string Update(string name)
+        {
+            return $"{name} adlı başlık başarıyla güncellenmiştir.";
+        }
+
+        public static string Delete(string name)
+        {
+            return $"{name} adlı başlık başarıyla silinmiştir.";
+        }
+
+        public static string HardDelete(string name)
+        {
+            return $"{name} adlı başlık veritabanından silinmiştir.";
+        }
+
+        public static string UndoDelete(string name)
+        {
+            return $"{name} adlı başlık başarıyla arşivden geri getirilmiştir.";
         }
     }
 

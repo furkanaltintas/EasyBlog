@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Autofac.Extras.DynamicProxy;
+using AutoMapper;
 using EasyBlog.Core.Enums;
 using EasyBlog.Core.Utilities.Results.Abstract;
 using EasyBlog.Core.Utilities.Results.ComplexTypes;
@@ -7,6 +8,7 @@ using EasyBlog.Data.UnitOfWorks;
 using EasyBlog.Entity.DTOs.Articles;
 using EasyBlog.Entity.DTOs.Categories;
 using EasyBlog.Entity.Entities;
+using EasyBlog.Service.Aspects;
 using EasyBlog.Service.Extensions;
 using EasyBlog.Service.Helpers.Images.Abstractions;
 using EasyBlog.Service.Services.Abstractions;
@@ -17,6 +19,8 @@ using IResult = EasyBlog.Core.Utilities.Results.Abstract.IResult;
 
 namespace EasyBlog.Service.Services.Concretes;
 
+[Intercept(typeof(ValidationAspect))]
+[Intercept(typeof(CacheAspect))]
 public class ArticleService : RepositoryService, IArticleService
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
@@ -82,7 +86,7 @@ public class ArticleService : RepositoryService, IArticleService
             var categories = await _unitOfWork.GetRepository<Category>().GetAllAsync(c => !c.IsDeleted);
 
             var articleUpdateDto = _mapper.Map<ArticleUpdateDto>(dataResult.Data);
-            articleUpdateDto.Categories = _mapper.Map<List<CategoryDto>>(categories);
+            articleUpdateDto.Categories = _mapper.Map<List<CategoryListDto>>(categories);
             return new DataResult<ArticleUpdateDto>(ResultStatus.Success, articleUpdateDto);
         }
 

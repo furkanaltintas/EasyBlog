@@ -2,7 +2,7 @@
 using EasyBlog.Entity.DTOs.Articles;
 using EasyBlog.Entity.Entities;
 
-namespace EasyBlog.Service.AutoMapper.Articles;
+namespace EasyBlog.Service.AutoMapper.Profiles;
 
 public class ArticleProfile : Profile
 {

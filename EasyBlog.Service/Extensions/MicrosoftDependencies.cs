@@ -20,7 +20,6 @@ public static class MicrosoftDependencies
         //services.AddScoped<IServiceManager, ServiceManager>();
 
 
-
         services.AddScoped<IImageUploader, ImageUploader>();
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

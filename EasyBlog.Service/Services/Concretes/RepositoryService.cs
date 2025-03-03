@@ -10,7 +10,7 @@ public abstract class RepositoryService
 
     protected RepositoryService(IMapper mapper, IUnitOfWork unitOfWork)
     {
-        _mapper = mapper;
-        _unitOfWork = unitOfWork;
+        _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
     }
 }

@@ -1,8 +1,15 @@
-﻿using EasyBlog.Entity.DTOs.Categories;
+﻿using EasyBlog.Core.Utilities.Results.Abstract;
+using EasyBlog.Entity.DTOs.Categories;
 
 namespace EasyBlog.Service.Services.Abstractions;
 
 public interface ICategoryService
 {
-    Task<IList<CategoryDto>> GetAllCategoriesNonDeletedAsync();
+    Task<IDataResult<IList<CategoryListDto>>> GetAllCategoriesNonDeletedAsync();
+    Task<IDataResult<CategoryDto>> GetCategoryByGuid(Guid categoryId);
+    Task<IDataResult<CategoryUpdateDto>> GetCategoryByUpdateGuid(Guid categoryId);
+
+    Task<IResult> CreateCategoryAsync(CategoryAddDto categoryAddDto);
+    Task<IResult> UpdateCategoryAsync(CategoryUpdateDto categoryUpdateDto, Guid categoryId);
+    Task<IResult> SafeDeleteCategoryAsync(Guid categoryId);
 }
