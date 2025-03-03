@@ -2,6 +2,7 @@
 using EasyBlog.Entity.DTOs.Articles;
 using EasyBlog.Entity.DTOs.Categories;
 using EasyBlog.Service.Services.Managers;
+using EasyBlog.Web.Areas.Management.Controllers.Base;
 using EasyBlog.Web.Constants;
 using EasyBlog.Web.Helpers;
 using Microsoft.AspNetCore.Authorization;

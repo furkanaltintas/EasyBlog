@@ -12,6 +12,7 @@ using EasyBlog.Service.Aspects;
 using EasyBlog.Service.Extensions;
 using EasyBlog.Service.Helpers.Images.Abstractions;
 using EasyBlog.Service.Services.Abstractions;
+using EasyBlog.Service.Services.Managers;
 using EasyBlog.Service.Utilities;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;

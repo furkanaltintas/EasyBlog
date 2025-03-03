@@ -1,7 +1,7 @@
 ﻿using EasyBlog.Service.Services.Managers;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EasyBlog.Web.Areas.Management.Controllers;
+namespace EasyBlog.Web.Areas.Management.Controllers.Base;
 
 [Area("Management")]
 public class BaseController : Controller

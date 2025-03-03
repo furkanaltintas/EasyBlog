@@ -1,6 +1,7 @@
 ﻿using EasyBlog.Core.Utilities.Results.ComplexTypes;
 using EasyBlog.Entity.DTOs.Categories;
 using EasyBlog.Service.Services.Managers;
+using EasyBlog.Web.Areas.Management.Controllers.Base;
 using EasyBlog.Web.Constants;
 using EasyBlog.Web.Helpers;
 using Microsoft.AspNetCore.Mvc;
@@ -62,11 +63,10 @@ public class CategoryController : BaseController
         return Json(result.Message);
     }
 
-
     [Route(RouteConstants.Update + "/{categoryId:guid}")]
     public async Task<IActionResult> Update(Guid categoryId)
     {
-        var dataResult = await _serviceManager.CategoryService.GetCategoryByUpdateGuid(categoryId);
+        var dataResult = await _serviceManager.CategoryService.GetCategoryByUpdateGuidAsync(categoryId);
 
         if (dataResult.ResultStatus == ResultStatus.Success)
             return View(dataResult.Data);

@@ -1,6 +1,5 @@
 ﻿using Autofac.Extras.DynamicProxy;
 using AutoMapper;
-using EasyBlog.Core.Entities.Abstract;
 using EasyBlog.Core.Utilities.Results.Abstract;
 using EasyBlog.Core.Utilities.Results.ComplexTypes;
 using EasyBlog.Core.Utilities.Results.Concrete;
@@ -9,6 +8,7 @@ using EasyBlog.Entity.DTOs.Categories;
 using EasyBlog.Entity.Entities;
 using EasyBlog.Service.Aspects;
 using EasyBlog.Service.Services.Abstractions;
+using EasyBlog.Service.Services.Managers;
 using EasyBlog.Service.Utilities;
 
 namespace EasyBlog.Service.Services.Concretes;
@@ -48,7 +48,7 @@ public class CategoryService : RepositoryService, ICategoryService
         return new DataResult<CategoryDto>(ResultStatus.Success, categoryDto);
     }
 
-    public async Task<IDataResult<CategoryUpdateDto>> GetCategoryByUpdateGuid(Guid categoryId)
+    public async Task<IDataResult<CategoryUpdateDto>> GetCategoryByUpdateGuidAsync(Guid categoryId)
     {
         var category = await _unitOfWork.GetRepository<Category>().GetAsync(c => c.Id == categoryId && !c.IsDeleted);
 

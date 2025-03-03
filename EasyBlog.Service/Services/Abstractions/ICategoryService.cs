@@ -7,7 +7,7 @@ public interface ICategoryService
 {
     Task<IDataResult<IList<CategoryListDto>>> GetAllCategoriesNonDeletedAsync();
     Task<IDataResult<CategoryDto>> GetCategoryByGuid(Guid categoryId);
-    Task<IDataResult<CategoryUpdateDto>> GetCategoryByUpdateGuid(Guid categoryId);
+    Task<IDataResult<CategoryUpdateDto>> GetCategoryByUpdateGuidAsync(Guid categoryId);
 
     Task<IResult> CreateCategoryAsync(CategoryAddDto categoryAddDto);
     Task<IResult> UpdateCategoryAsync(CategoryUpdateDto categoryUpdateDto, Guid categoryId);

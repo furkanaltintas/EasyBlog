@@ -1,5 +1,6 @@
 ﻿using EasyBlog.Entity.DTOs.Users;
 using EasyBlog.Service.Services.Managers;
+using EasyBlog.Web.Areas.Management.Controllers.Base;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

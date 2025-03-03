@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using EasyBlog.Data.UnitOfWorks;
 
-namespace EasyBlog.Service.Services.Concretes;
+namespace EasyBlog.Service.Services.Managers;
 
 public abstract class RepositoryService
 {
