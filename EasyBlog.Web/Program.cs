@@ -38,26 +38,10 @@ builder.Host.ConfigureContainer<ContainerBuilder>(contaier =>
 });
 #endregion
 
-
-builder.Services.AddSession();
-
-builder.Services
-    .AddControllersWithViews()
-    .AddNToastNotifyToastr(new()
-    {
-        PositionClass = ToastPositions.TopRight,
-        Title = "Baþarýlý Ýþlem!",
-        TimeOut = 5000,
-        ProgressBar = true,
-        CloseButton = true
-    })
-    .AddRazorRuntimeCompilation();
-
 #region Extensions
 builder.Services.LoadDataExtension(builder.Configuration);
 builder.Services.LoadServiceExtension();
 #endregion
-
 
 #region Identity & Cookie
 builder.Services.AddIdentity<AppUser, AppRole>(action =>
@@ -89,17 +73,29 @@ builder.Services.ConfigureApplicationCookie(configure =>
 });
 #endregion
 
+#region ToastNotification
+builder.Services
+    .AddControllersWithViews()
+    .AddNToastNotifyToastr(new()
+    {
+        PositionClass = ToastPositions.TopRight,
+        Title = "Baþarýlý Ýþlem!",
+        TimeOut = 5000,
+        ProgressBar = true,
+        CloseButton = true
+    })
+    .AddRazorRuntimeCompilation();
+#endregion
+
+builder.Services.AddSession(); // Session ekleme
+
 
 var app = builder.Build();
-
 app.UseMiddleware<LowercaseUrlMiddleware>(); // Küçük harf zorunluluðu
 
-
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -113,8 +109,11 @@ app.UseStaticFiles();
 app.UseAuthentication(); // Sisteme login oldu mu ?
 app.UseAuthorization(); // Yetkisi var mý ?
 
-app.MapStaticAssets();
 
+
+
+// Yönlendirme enpoint'leri
+app.MapStaticAssets();
 #region Endpoints
 app.UseEndpoints(endpoints =>
 {

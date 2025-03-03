@@ -47,9 +47,23 @@ public class CategoryController : BaseController
         return View(categoryAddDto);
     }
 
+    [HttpPost]
+    public async Task<IActionResult> AddWithAjax([FromBody] CategoryAddDto categoryAddDto)
+    {
+        var result = await _serviceManager.CategoryService.CreateCategoryAsync(categoryAddDto);
+
+        if (result.ResultStatus == ResultStatus.Success)
+        {
+            NotificationHelper.ShowSuccess(_toastNotification, result.Message);
+            return Json(result.Message);
+        }
+
+        NotificationHelper.ShowError(_toastNotification, result.Message);
+        return Json(result.Message);
+    }
+
 
     [Route(RouteConstants.Update + "/{categoryId:guid}")]
-
     public async Task<IActionResult> Update(Guid categoryId)
     {
         var dataResult = await _serviceManager.CategoryService.GetCategoryByUpdateGuid(categoryId);
