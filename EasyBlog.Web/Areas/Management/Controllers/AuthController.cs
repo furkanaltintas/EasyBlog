@@ -1,5 +1,4 @@
 ﻿using EasyBlog.Entity.DTOs.Users;
-using EasyBlog.Service.Services.Abstractions;
 using EasyBlog.Service.Services.Managers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

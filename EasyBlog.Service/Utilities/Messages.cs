@@ -18,7 +18,7 @@ public static class Messages
             return "Böyle bir makale bulunamadı";
         }
 
-        public static string NotFoundById(int articleId)
+        public static string NotFoundById(Guid articleId)
         {
             return $"{articleId} makale koduna ait bir makale bulunamadı.";
         }
@@ -47,5 +47,10 @@ public static class Messages
         {
             return $"{articleTitle} adlı makale başarıyla arşivden geri getirilmiştir.";
         }
+    }
+
+    public static class Auth
+    {
+        public static string UserInvalid() => "Kullanıcı oturumu geçersiz";
     }
 }

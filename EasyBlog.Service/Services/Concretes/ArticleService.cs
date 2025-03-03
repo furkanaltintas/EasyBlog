@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EasyBlog.Core.Enums;
 using EasyBlog.Core.Utilities.Results.Abstract;
 using EasyBlog.Core.Utilities.Results.ComplexTypes;
 using EasyBlog.Core.Utilities.Results.Concrete;
@@ -6,27 +7,50 @@ using EasyBlog.Data.UnitOfWorks;
 using EasyBlog.Entity.DTOs.Articles;
 using EasyBlog.Entity.DTOs.Categories;
 using EasyBlog.Entity.Entities;
+using EasyBlog.Service.Extensions;
+using EasyBlog.Service.Helpers.Images.Abstractions;
 using EasyBlog.Service.Services.Abstractions;
 using EasyBlog.Service.Utilities;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using IResult = EasyBlog.Core.Utilities.Results.Abstract.IResult;
 
 namespace EasyBlog.Service.Services.Concretes;
 
 public class ArticleService : RepositoryService, IArticleService
 {
-    private readonly ICurrentUserService _currentUserService;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly IImageHelper _imageHelper;
+    private readonly ClaimsPrincipal _user;
 
     public ArticleService(
         IMapper mapper,
         IUnitOfWork unitOfWork,
-        ICurrentUserService currentUserService) : base(mapper, unitOfWork)
+        IImageHelper imageHelper,
+        IHttpContextAccessor httpContextAccessor) : base(mapper, unitOfWork)
     {
-        _currentUserService = currentUserService;
+        _httpContextAccessor = httpContextAccessor;
+        _user = httpContextAccessor.HttpContext?.User ?? new ClaimsPrincipal();
+        _imageHelper = imageHelper;
     }
 
     public async Task<IResult> CreateArticleAsync(ArticleAddDto articleAddDto)
     {
+        var userId = _user.GetLoggedInUserId();
+
+        if (userId == Guid.Empty)
+            return new Result(ResultStatus.Error, Messages.Auth.UserInvalid());
+
+        #region Resim ekleme işlemi
+        var imageUpload = await _imageHelper.Upload(articleAddDto.Title, articleAddDto.Photo, ImageType.Post);
+        Image image = new(imageUpload.FullName, articleAddDto.Photo.ContentType);
+        await _unitOfWork.GetRepository<Image>().AddAsync(image);
+        #endregion
+
+
         var article = _mapper.Map<Article>(articleAddDto);
-        article.UserId = _currentUserService.GetCurrentUserId();
+        article.ImageId = image.Id;
+        article.UserId = userId;
 
         await _unitOfWork.GetRepository<Article>().AddAsync(article);
         await _unitOfWork.SaveAsync();
@@ -39,34 +63,34 @@ public class ArticleService : RepositoryService, IArticleService
             .GetRepository<Article>()
             .GetAllAsync(a => !a.IsDeleted, a => a.Category);
 
-        if (articles.Count > -1)
+        if (articles.Any())
         {
             var articleListDtos = _mapper.Map<List<ArticleListDto>>(articles);
             return new DataResult<List<ArticleListDto>>(ResultStatus.Success, articleListDtos);
         }
 
-        return new DataResult<List<ArticleListDto>>(ResultStatus.Error, null);
+        return new DataResult<List<ArticleListDto>>(ResultStatus.Error, Messages.Article.NotFound(true), new());
     }
 
     public async Task<IDataResult<ArticleUpdateDto>> GetArticleForUpdateAsync(Guid articleId)
     {
-        var article = await _unitOfWork.GetRepository<Article>().GetAsync(a => a.Id == articleId && !a.IsDeleted);
+        var dataResult = await GetArticleAsync(articleId);
 
-        if (article != null)
+
+        if (dataResult.ResultStatus == ResultStatus.Success)
         {
             var categories = await _unitOfWork.GetRepository<Category>().GetAllAsync(c => !c.IsDeleted);
 
-            var articleUpdateDto = _mapper.Map<ArticleUpdateDto>(article);
+            var articleUpdateDto = _mapper.Map<ArticleUpdateDto>(dataResult.Data);
             articleUpdateDto.Categories = _mapper.Map<List<CategoryDto>>(categories);
             return new DataResult<ArticleUpdateDto>(ResultStatus.Success, articleUpdateDto);
         }
 
-        return new DataResult<ArticleUpdateDto>(ResultStatus.Error, null);
+        return new DataResult<ArticleUpdateDto>(ResultStatus.Error, Messages.Article.NotFoundById(articleId), null);
     }
 
     public async Task<IDataResult<ArticleDto>> GetArticleWithCategoryNonDeletedAsync(Guid articleId)
     {
-        //var articleDto = _mapper.Map<ArticleDto>(await GetArticleAsync(articleId));
         var dataResult = await GetArticleAsync(articleId);
 
         if (dataResult.ResultStatus == ResultStatus.Success)
@@ -89,7 +113,7 @@ public class ArticleService : RepositoryService, IArticleService
             return new Result(ResultStatus.Success, Messages.Article.Delete(dataResult.Data.Title));
         }
 
-        return new Result(ResultStatus.Error, "");
+        return new Result(ResultStatus.Error, Messages.Article.NotFoundById(articleId));
     }
 
     public async Task<IDataResult<ArticleUpdateDto>> UpdateArticleAsync(ArticleUpdateDto articleUpdateDto)
@@ -99,6 +123,19 @@ public class ArticleService : RepositoryService, IArticleService
         if (dataResult.Data == null)
             return new DataResult<ArticleUpdateDto>(ResultStatus.Error, null);
 
+        if (articleUpdateDto.Photo != null)
+        {
+            _imageHelper.Delete(dataResult.Data.Image.FileName);
+
+            var imageUpload = await _imageHelper.Upload(articleUpdateDto.Title, articleUpdateDto.Photo, ImageType.Post);
+            Image image = new(imageUpload.FullName, articleUpdateDto.Photo.ContentType);
+            await _unitOfWork.GetRepository<Image>().AddAsync(image);
+
+            dataResult.Data.ImageId = image.Id;
+        }
+
+
+        // HATA
         _mapper.Map(articleUpdateDto, dataResult.Data);
         await _unitOfWork.GetRepository<Article>().UpdateAsync(dataResult.Data);
         await _unitOfWork.SaveAsync();
@@ -109,11 +146,11 @@ public class ArticleService : RepositoryService, IArticleService
     // Get
     private async Task<IDataResult<Article>> GetArticleAsync(Guid articleId)
     {
-        var article = await _unitOfWork.GetRepository<Article>().GetAsync(a => !a.IsDeleted && a.Id == articleId, a => a.Category);
+        var article = await _unitOfWork.GetRepository<Article>().GetAsync(a => !a.IsDeleted && a.Id == articleId, a => a.Category, a => a.Image);
 
         if (article != null)
             return new DataResult<Article>(ResultStatus.Success, article);
 
-        return new DataResult<Article>(ResultStatus.Error, null);
+        return new DataResult<Article>(ResultStatus.Error, Messages.Article.NotFoundById(articleId), null);
     }
 }

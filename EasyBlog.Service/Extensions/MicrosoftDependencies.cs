@@ -1,9 +1,9 @@
-﻿using EasyBlog.Service.Services.Abstractions;
-using EasyBlog.Service.Services.Concretes;
+﻿using EasyBlog.Service.Helpers.Images.Abstractions;
+using EasyBlog.Service.Helpers.Images.Concretes;
 using EasyBlog.Service.Services.Managers;
 using EasyBlog.Service.ValidationRules.FluentValidation.DtoValidators;
-using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using System.Globalization;
@@ -15,9 +15,19 @@ public static class MicrosoftDependencies
 {
     public static IServiceCollection LoadServiceExtension(this IServiceCollection services)
     {
+        //services.AddScoped<IImageHelper, ImageHelper>();
+        //services.AddScoped<IFileNameHelper, FileNameHelper>();
+        //services.AddScoped<IServiceManager, ServiceManager>();
+
+
+
+        services.AddScoped<IImageUploader, ImageUploader>();
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
         // Tek bir yerden yönetme
         services.AddAssemblyServices(typeof(BaseService).Assembly);
-        //services.AddScoped<IServiceManager, ServiceManager>();
+
+        
 
 
         #region AutoMapper

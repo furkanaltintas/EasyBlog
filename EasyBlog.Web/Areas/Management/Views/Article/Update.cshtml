@@ -17,14 +17,27 @@
                     </div>
                     <div class="card-body">
                         <div class="form-group">
-                            <label asp-for="Title" class="form-label">Title</label>
+                            <label asp-for="Title" class="form-label">Başlık</label>
                             <input asp-for="Title" type="text" class="form-control" placeholder="Başlık" aria-describedby="defaultFormControlHelp" />
                         </div>
                     </div>
                     <div class="card-body">
                         <div class="form-group">
-                            <label asp-for="Content" class="form-label">Content</label>
+                            <label asp-for="Content" class="form-label">İçerik</label>
                             <textarea asp-for="Content" type="text" class="form-control" placeholder="İçerik" aria-describedby="defaultFormControlHelp"></textarea>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label asp-for="Image.FileName" class="form-label d-block">Mevcut Resim</label>
+                            <img src="~/images/@Model.Image?.FileName" alt="@Model.Title" class="img-fluid w-25 mb-3" />
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label asp-for="Photo" class="form-label">Resim Seçiniz</label>
+                            <input asp-for="Photo" type="file" accept="image/*" class="form-control" aria-describedby="defaultFormControlHelp" />
+                            <span asp-validation-for="Photo" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="card-body">

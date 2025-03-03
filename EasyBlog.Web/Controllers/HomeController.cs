@@ -1,4 +1,3 @@
-using EasyBlog.Service.Services.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EasyBlog.Web.Controllers;

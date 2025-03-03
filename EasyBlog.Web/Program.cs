@@ -10,7 +10,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddSession();
-builder.Services.AddHttpContextAccessor(); // IHttpContextAccessor servisini ekliyoruz
 
 builder.Services
     .AddControllersWithViews()
@@ -78,10 +77,9 @@ app.UseNToastNotify();
 
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
 app.UseSession();
 app.UseRouting();
-
+app.UseStaticFiles();
 app.UseAuthentication(); // Sisteme login oldu mu ?
 app.UseAuthorization(); // Yetkisi var mý ?
 

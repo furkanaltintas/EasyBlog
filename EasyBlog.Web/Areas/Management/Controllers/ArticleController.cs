@@ -1,12 +1,9 @@
-﻿using EasyBlog.Core.Entities.Abstract;
-using EasyBlog.Core.Enums;
-using EasyBlog.Core.Utilities.Results.ComplexTypes;
+﻿using EasyBlog.Core.Utilities.Results.ComplexTypes;
 using EasyBlog.Entity.DTOs.Articles;
 using EasyBlog.Entity.DTOs.Categories;
-using EasyBlog.Service.Extensions;
 using EasyBlog.Service.Services.Managers;
-using EasyBlog.Web.ResultMessages;
-using FluentValidation;
+using EasyBlog.Web.Constants;
+using EasyBlog.Web.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
@@ -25,24 +22,24 @@ public class ArticleController : BaseController
     }
 
 
-    [Route("makaleler")]
+    [Route(RouteConstants.Article)]
     public async Task<IActionResult> Index()
     {
         var result = await _serviceManager.ArticleService.GetAllArticlesWithCategoryNonDeletedAsync();
         if (result.ResultStatus == ResultStatus.Success) return View(result.Data);
-        return NotFound();
+        else return View(result.Data);
     }
 
 
-    [Route("ekleme")]
+    [Route(RouteConstants.Add)]
     public async Task<IActionResult> Add()
     {
-        var articleAddDto = (ArticleAddDto)await PrepareArticleAddAndUpdateDtoAsync(TransactionType.Add);
+        var articleAddDto = new ArticleAddDto { Categories = await GetCategoriesAsync() };
         return View(articleAddDto);
     }
 
 
-    [HttpPost("ekleme")]
+    [HttpPost(RouteConstants.Add)]
     public async Task<IActionResult> Add(ArticleAddDto articleAddDto)
     {
         if (ModelState.IsValid)
@@ -58,14 +55,14 @@ public class ArticleController : BaseController
             ModelState.AddModelError(string.Empty, result.Message);
         }
 
-        foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-            _toastNotification.AddErrorToastMessage(error.ErrorMessage);
+
+        ToastHelper.AddErrorsToToastNotification(ModelState, _toastNotification);
         articleAddDto.Categories = await _serviceManager.CategoryService.GetAllCategoriesNonDeletedAsync();
         return View(articleAddDto);
     }
 
 
-    [Route("guncelleme/{articleId:guid}")]
+    [Route(RouteConstants.Update + "/{articleId:guid}")]
     public async Task<IActionResult> Update(Guid articleId)
     {
         var dataResult = await _serviceManager.ArticleService.GetArticleForUpdateAsync(articleId);
@@ -77,7 +74,7 @@ public class ArticleController : BaseController
     }
 
 
-    [HttpPost("guncelleme/{articleId:guid}")]
+    [HttpPost(RouteConstants.Update + "/{articleId:guid}")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Update(ArticleUpdateDto articleUpdateDto, Guid articleId)
     {
@@ -94,13 +91,13 @@ public class ArticleController : BaseController
 
         }
 
-        foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-            _toastNotification.AddErrorToastMessage(error.ErrorMessage);
-        return View((ArticleUpdateDto)await PrepareArticleAddAndUpdateDtoAsync(TransactionType.Update, articleUpdateDto));
+        ToastHelper.AddErrorsToToastNotification(ModelState, _toastNotification);
+        articleUpdateDto.Categories = await GetCategoriesAsync();
+        return View(articleUpdateDto);
     }
 
 
-    [Route("silme")]
+    [Route(RouteConstants.Delete)]
     public async Task<IActionResult> Delete(Guid articleId)
     {
         var result = await _serviceManager.ArticleService.SafeDeleteArticleAsync(articleId);
@@ -117,26 +114,6 @@ public class ArticleController : BaseController
 
 
     #region Category SelectList
-    private async Task<IList<CategoryDto>> GetCategoriesAsync() =>
-    await _serviceManager.CategoryService.GetAllCategoriesNonDeletedAsync();
-
-    private async Task<IDto> PrepareArticleAddAndUpdateDtoAsync(TransactionType type, ArticleUpdateDto? articleUpdateDto = null)
-    {
-        var categories = await GetCategoriesAsync();
-
-        switch (type)
-        {
-            case TransactionType.Add:
-                return new ArticleAddDto { Categories = categories };
-            case TransactionType.Update:
-                if (articleUpdateDto == null)
-                    throw new ArgumentNullException(nameof(articleUpdateDto), "ArticleUpdateDto cannot be null when updating an article.");
-
-                articleUpdateDto.Categories = categories;
-                return articleUpdateDto;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
-    }
+    private async Task<IList<CategoryDto>> GetCategoriesAsync() => await _serviceManager.CategoryService.GetAllCategoriesNonDeletedAsync();
     #endregion
 }

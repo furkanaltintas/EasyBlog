@@ -12,7 +12,7 @@ public static class ServiceExtensions
 
         // Hizmet tiplerini filtrelemeye yarar
         var serviceTypes = allTypes
-            .Where(p => p.IsInterface && !p.IsClass && p.Name.StartsWith("I") && p.Name.EndsWith("Service"))
+            .Where(p => p.IsInterface && !p.IsClass && p.Name.StartsWith("I") && (p.Name.EndsWith("Service") || p.Name.EndsWith("Helper")))
             .ToList();
 
         foreach (var serviceType in serviceTypes)

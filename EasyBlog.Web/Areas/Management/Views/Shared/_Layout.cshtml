@@ -6,6 +6,19 @@
     }
 }
 
+@{
+    // Context.Request.Path.Value => İstek yapılan Url'nin yolunu verir.
+    // Trim => Yolun başındaki ve sonundaki '/' karakterlerini temizler.
+    // Split => Yolu '/' karakterine göre ayırır ve her bir kısmı bir dizi haline getirir.
+    var segments = Context.Request.Path.Value?.Trim('/').Split('/');
+
+    // Dizinin uzunluğunu kontrol ediyoruz.
+    // Dizinin uzunluğu 1'den fazla ise (yani en az 2 segment varsa), segments[1] kısmını alır.
+    // Dizinin uzunluğu 1 veya daha kısa ise ilk değeri alır.
+    // yonetim[0]/makaleler[1] => 2 değer
+    var secondSegment = segments.Length > 1 ? segments[1] : segments[0];
+}
+
 
 <!DOCTYPE html>
 <html lang="en"
@@ -19,7 +32,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>Dashboard - Analytics | Sneat - Bootstrap 5 HTML Admin Template - Pro</title>
+    <title>Dashboard | @secondSegment</title>
 
     <meta name="description" content="" />
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
