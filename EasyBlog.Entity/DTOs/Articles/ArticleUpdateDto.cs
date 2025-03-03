@@ -15,6 +15,6 @@ namespace EasyBlog.Entity.DTOs.Articles
         public Image Image { get; set; } = new();
         public IFormFile? Photo { get; set; }
 
-        public virtual IList<CategoryDto> Categories { get; set; } = new List<CategoryDto>();
+        public virtual IList<CategoryListDto> Categories { get; set; } = new List<CategoryListDto>();
     }
 }

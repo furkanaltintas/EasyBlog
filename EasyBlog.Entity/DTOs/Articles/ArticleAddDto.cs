@@ -12,5 +12,5 @@ public class ArticleAddDto : IDto
 
     public IFormFile Photo { get; set; }
 
-    public IList<CategoryDto> Categories { get; set; } = new List<CategoryDto>();
+    public IList<CategoryListDto> Categories { get; set; } = new List<CategoryListDto>();
 }
