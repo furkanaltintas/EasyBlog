@@ -7,4 +7,6 @@ public interface IBaseService
     IAuthService AuthService { get; }
     IArticleService ArticleService { get; }
     ICategoryService CategoryService { get; }
+    IUserService UserService { get; }
+    IRoleService RoleService { get; }
 }

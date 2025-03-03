@@ -92,4 +92,22 @@ public static class Messages
     {
         public static string UserInvalid() => "Kullanıcı oturumu geçersiz";
     }
+
+    public static class User
+    {
+        public static string Add(string email)
+        {
+            return $"{email} email adresli kullanıcı başarıyla eklenmiştir.";
+        }
+
+        public static string Update(string email)
+        {
+            return $"{email} email adresli kullanıcı başarıyla eklenmiştir.";
+        }
+
+        public static string Delete(string email)
+        {
+            return $"{email} email adresli kullanıcı başarıyla eklenmiştir.";
+        }
+    }
 }

@@ -8,4 +8,5 @@ public static class RouteConstants
 
     public const string Article = "makaleler";
     public const string Category = "kategoriler";
+    public const string User = "kullanicilar";
 }
