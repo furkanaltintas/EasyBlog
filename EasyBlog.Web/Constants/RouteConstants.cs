@@ -7,4 +7,5 @@ public static class RouteConstants
     public const string Delete = "silme";
 
     public const string Article = "makaleler";
+    public const string Category = "kategoriler";
 }

@@ -1,12 +1,42 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Autofac.Extras.DynamicProxy;
 using EasyBlog.Data.Context;
 using EasyBlog.Data.Extensions;
 using EasyBlog.Entity.Entities;
+using EasyBlog.Service.Aspects;
 using EasyBlog.Service.Extensions;
+using EasyBlog.Service.Services.Concretes;
+using EasyBlog.Service.ValidationRules.FluentValidation;
 using EasyBlog.Web.Middleware;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using NToastNotify;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+
+#region Autofac
+// Autofac Kullanýmý
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+builder.Host.ConfigureContainer<ContainerBuilder>(contaier =>
+{
+    contaier.RegisterType<ValidationAspect>(); // Aspect'i kaydet
+    contaier.RegisterType<CacheAspect>();
+
+    // Tüm servisleri dinamik proxy olarak kaydet (Aspect'leri çalýþtýrabilmek için)
+    contaier.RegisterAssemblyTypes(typeof(CategoryService).Assembly)
+    .AsImplementedInterfaces()
+    .EnableInterfaceInterceptors()
+    .InterceptedBy(typeof(ValidationAspect));
+
+    // FluentValidation Validator'larý otomatik ekle
+    contaier.RegisterAssemblyTypes(typeof(CategoryValidator).Assembly)
+    .Where(p => p.IsAssignableTo(typeof(IValidator)))
+    .AsImplementedInterfaces();
+});
+#endregion
 
 
 builder.Services.AddSession();

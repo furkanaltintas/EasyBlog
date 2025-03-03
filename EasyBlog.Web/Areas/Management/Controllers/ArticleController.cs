@@ -11,7 +11,7 @@ using NToastNotify;
 namespace EasyBlog.Web.Areas.Management.Controllers;
 
 [Authorize]
-[Route("yonetim")]
+[Route(RouteConstants.Article)]
 public class ArticleController : BaseController
 {
     private readonly IToastNotification _toastNotification;
@@ -22,7 +22,6 @@ public class ArticleController : BaseController
     }
 
 
-    [Route(RouteConstants.Article)]
     public async Task<IActionResult> Index()
     {
         var result = await _serviceManager.ArticleService.GetAllArticlesWithCategoryNonDeletedAsync();
@@ -42,22 +41,17 @@ public class ArticleController : BaseController
     [HttpPost(RouteConstants.Add)]
     public async Task<IActionResult> Add(ArticleAddDto articleAddDto)
     {
-        if (ModelState.IsValid)
+        var result = await _serviceManager.ArticleService.CreateArticleAsync(articleAddDto);
+
+        if (result.ResultStatus == ResultStatus.Success)
         {
-            var result = await _serviceManager.ArticleService.CreateArticleAsync(articleAddDto);
-
-            if (result.ResultStatus == ResultStatus.Success)
-            {
-                _toastNotification.AddSuccessToastMessage(result.Message, new ToastrOptions { Title = "Başarılı İşlem!" });
-                return RedirectToAction(nameof(Index));
-            }
-
-            ModelState.AddModelError(string.Empty, result.Message);
+            NotificationHelper.ShowSuccess(_toastNotification, result.Message);
+            return RedirectToAction(nameof(Index));
         }
 
-
-        ToastHelper.AddErrorsToToastNotification(ModelState, _toastNotification);
-        articleAddDto.Categories = await _serviceManager.CategoryService.GetAllCategoriesNonDeletedAsync();
+        NotificationHelper.ShowError(_toastNotification, result.Message);
+        var dataResult = await _serviceManager.CategoryService.GetAllCategoriesNonDeletedAsync();
+        articleAddDto.Categories = dataResult.Data;
         return View(articleAddDto);
     }
 
@@ -70,28 +64,24 @@ public class ArticleController : BaseController
         if (dataResult.ResultStatus == ResultStatus.Success)
             return View(dataResult.Data);
         else
-            return NotFound();
+            NotificationHelper.ShowError(_toastNotification, dataResult.Message);
+        return RedirectToAction(nameof(Index));
     }
 
 
     [HttpPost(RouteConstants.Update + "/{articleId:guid}")]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Update(ArticleUpdateDto articleUpdateDto, Guid articleId)
     {
-        if (ModelState.IsValid)
+        articleUpdateDto.Id = articleId;
+        var dataResult = await _serviceManager.ArticleService.UpdateArticleAsync(articleUpdateDto);
+
+        if (dataResult.ResultStatus == ResultStatus.Success)
         {
-            articleUpdateDto.Id = articleId;
-            var dataResult = await _serviceManager.ArticleService.UpdateArticleAsync(articleUpdateDto);
-
-            if (dataResult.ResultStatus == ResultStatus.Success)
-            {
-                _toastNotification.AddSuccessToastMessage(dataResult.Message, new ToastrOptions() { Title = "Başarılı İşlem" });
-                return RedirectToAction(nameof(Index));
-            }
-
+            NotificationHelper.ShowSuccess(_toastNotification, dataResult.Message);
+            return RedirectToAction(nameof(Index));
         }
 
-        ToastHelper.AddErrorsToToastNotification(ModelState, _toastNotification);
+        NotificationHelper.ShowSuccess(_toastNotification, dataResult.Message);
         articleUpdateDto.Categories = await GetCategoriesAsync();
         return View(articleUpdateDto);
     }
@@ -104,16 +94,21 @@ public class ArticleController : BaseController
 
         if (result.ResultStatus == ResultStatus.Success)
         {
-            _toastNotification.AddSuccessToastMessage(result.Message, new ToastrOptions() { Title = "İşlem Başarılı" });
+            NotificationHelper.ShowSuccess(_toastNotification, result.Message);
             return RedirectToAction(nameof(Index));
         }
-        else
-            return NotFound();
+
+        NotificationHelper.ShowError(_toastNotification, result.Message);
+        return RedirectToAction(nameof(Index));
     }
 
 
 
     #region Category SelectList
-    private async Task<IList<CategoryDto>> GetCategoriesAsync() => await _serviceManager.CategoryService.GetAllCategoriesNonDeletedAsync();
+    private async Task<IList<CategoryListDto>> GetCategoriesAsync()
+    {
+        var dataResult = await _serviceManager.CategoryService.GetAllCategoriesNonDeletedAsync();
+        return dataResult.Data;
+    }
     #endregion
 }
