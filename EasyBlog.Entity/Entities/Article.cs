@@ -16,7 +16,7 @@ public class Article : EntityBase
     }
 
     public Guid UserId { get; set; }
-    public Guid ImageId { get; set; }
+    public Guid? ImageId { get; set; }
     public Guid CategoryId { get; set; }
 
 
@@ -26,6 +26,6 @@ public class Article : EntityBase
 
 
     public virtual AppUser User { get; set; }
-    public virtual Image? Image { get; set; }
+    public virtual Image Image { get; set; }
     public virtual Category Category { get; set; }
 }
