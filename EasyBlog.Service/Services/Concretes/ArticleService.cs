@@ -14,9 +14,7 @@ using EasyBlog.Service.Helpers.Images.Abstractions;
 using EasyBlog.Service.Services.Abstractions;
 using EasyBlog.Service.Services.Managers;
 using EasyBlog.Service.Utilities;
-using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
-using IResult = EasyBlog.Core.Utilities.Results.Abstract.IResult;
 
 namespace EasyBlog.Service.Services.Concretes;
 
@@ -24,15 +22,15 @@ namespace EasyBlog.Service.Services.Concretes;
 [Intercept(typeof(CacheAspect))]
 public class ArticleService : RepositoryService, IArticleService
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor;
     private readonly IImageHelper _imageHelper;
     private readonly ClaimsPrincipal _user;
 
     public ArticleService(
         IMapper mapper,
         IUnitOfWork unitOfWork,
-        IImageHelper imageHelper,
-        IHttpContextAccessor httpContextAccessor) : base(mapper, unitOfWork)
+        Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor,
+        IImageHelper imageHelper) : base(mapper, unitOfWork)
     {
         _httpContextAccessor = httpContextAccessor;
         _user = httpContextAccessor.HttpContext?.User ?? new ClaimsPrincipal();
@@ -51,7 +49,6 @@ public class ArticleService : RepositoryService, IArticleService
         Image image = new(imageUpload.FullName, articleAddDto.Photo.ContentType);
         await _unitOfWork.GetRepository<Image>().AddAsync(image);
         #endregion
-
 
         var article = _mapper.Map<Article>(articleAddDto);
         article.ImageId = image.Id;
@@ -112,7 +109,7 @@ public class ArticleService : RepositoryService, IArticleService
             return new DataResult<ArticleDto>(ResultStatus.Success, articleDto);
         }
 
-        return new DataResult<ArticleDto>(ResultStatus.Error, "", null);
+        return new DataResult<ArticleDto>(ResultStatus.Error);
     }
 
     public async Task<IResult> SafeDeleteArticleAsync(Guid articleId)
@@ -177,6 +174,6 @@ public class ArticleService : RepositoryService, IArticleService
         if (article != null)
             return new DataResult<Article>(ResultStatus.Success, article);
 
-        return new DataResult<Article>(ResultStatus.Error, Messages.Article.NotFoundById(articleId), null);
+        return new DataResult<Article>(ResultStatus.Error, Messages.Article.NotFoundById(articleId));
     }
 }

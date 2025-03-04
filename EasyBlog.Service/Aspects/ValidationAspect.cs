@@ -16,6 +16,9 @@ public class ValidationAspect : IInterceptor
     {
         foreach (var argument in invocation.Arguments)
         {
+            if (argument == null)
+                continue; // Eğer argument null ise, validasyon yapmadan diğer argümanlara geç
+
             var validatorType = typeof(IValidator<>).MakeGenericType(argument.GetType());
             var validator = _serviceProvider.GetService(validatorType) as IValidator;
             if (validator != null)
