@@ -4,6 +4,7 @@ using EasyBlog.Service.Services.Managers;
 using EasyBlog.Web.Areas.Management.Controllers.Base;
 using EasyBlog.Web.Constants;
 using EasyBlog.Web.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
 
@@ -13,12 +14,13 @@ namespace EasyBlog.Web.Areas.Management.Controllers;
 public class CategoryController : BaseController
 {
     private readonly IToastNotification _toastNotification;
-    public CategoryController(IBaseService serviceManager, IToastNotification toastNotification) : base(serviceManager)
+    public CategoryController(IToastNotification toastNotification, IBaseService baseService):base(baseService)
     {
         _toastNotification = toastNotification;
     }
 
 
+    [Authorize(Roles = $"{RoleConsts.SuperAdmin}, {RoleConsts.Admin}, {RoleConsts.User}")]
     public async Task<IActionResult> Index()
     {
         var dataResult = await _serviceManager.CategoryService.GetAllCategoriesNonDeletedAsync();
@@ -26,6 +28,8 @@ public class CategoryController : BaseController
         return View(dataResult.Data);
     }
 
+
+    [Authorize(Roles = $"{RoleConsts.SuperAdmin}, {RoleConsts.Admin}")]
     [Route(RouteConstants.DeletedCategories)]
     public async Task<IActionResult> DeletedCategories()
     {
@@ -34,12 +38,16 @@ public class CategoryController : BaseController
         return View(dataResult.Data);
     }
 
+
+    [Authorize(Roles = $"{RoleConsts.SuperAdmin}, {RoleConsts.Admin}")]
     [Route(RouteConstants.Add)]
     public IActionResult Add()
     {
         return View();
     }
 
+
+    [Authorize(Roles = $"{RoleConsts.SuperAdmin}, {RoleConsts.Admin}")]
     [HttpPost(RouteConstants.Add)]
     public async Task<IActionResult> Add(CategoryAddDto categoryAddDto)
     {
@@ -55,6 +63,8 @@ public class CategoryController : BaseController
         return View(categoryAddDto);
     }
 
+
+    [Authorize(Roles = $"{RoleConsts.SuperAdmin}, {RoleConsts.Admin}")]
     [HttpPost]
     public async Task<IActionResult> AddWithAjax([FromBody] CategoryAddDto categoryAddDto)
     {
@@ -70,6 +80,8 @@ public class CategoryController : BaseController
         return Json(result.Message);
     }
 
+
+    [Authorize(Roles = $"{RoleConsts.SuperAdmin}, {RoleConsts.Admin}")]
     [Route(RouteConstants.Update + "/{categoryId:guid}")]
     public async Task<IActionResult> Update(Guid categoryId)
     {
@@ -82,6 +94,8 @@ public class CategoryController : BaseController
         return RedirectToAction(nameof(Index));
     }
 
+
+    [Authorize(Roles = $"{RoleConsts.SuperAdmin}, {RoleConsts.Admin}")]
     [HttpPost(RouteConstants.Update + "/{categoryId:guid}")]
     public async Task<IActionResult> Update(CategoryUpdateDto categoryUpdateDto, Guid categoryId)
     {
@@ -97,6 +111,8 @@ public class CategoryController : BaseController
         return View(categoryUpdateDto);
     }
 
+
+    [Authorize(Roles = $"{RoleConsts.SuperAdmin}, {RoleConsts.Admin}")]
     [Route(RouteConstants.Delete)]
     public async Task<IActionResult> Delete(Guid categoryId)
     {
@@ -112,6 +128,8 @@ public class CategoryController : BaseController
         return RedirectToAction(nameof(Index));
     }
 
+
+    [Authorize(Roles = $"{RoleConsts.SuperAdmin}, {RoleConsts.Admin}")]
     [Route(RouteConstants.UndoDelete)]
     public async Task<IActionResult> UndoDelete(Guid categoryId)
     {

@@ -17,12 +17,13 @@ public class ArticleController : BaseController
 {
     private readonly IToastNotification _toastNotification;
 
-    public ArticleController(IBaseService serviceManager, IToastNotification toastNotification) : base(serviceManager)
+    public ArticleController(IToastNotification toastNotification, IBaseService baseService) : base(baseService)
     {
         _toastNotification = toastNotification;
     }
 
 
+    [Authorize(Roles = $"{RoleConsts.SuperAdmin}, {RoleConsts.Admin}, {RoleConsts.User}")]
     public async Task<IActionResult> Index()
     {
         var result = await _serviceManager.ArticleService.GetAllArticlesWithCategoryNonDeletedAsync();
@@ -31,6 +32,7 @@ public class ArticleController : BaseController
     }
 
 
+    [Authorize(Roles = $"{RoleConsts.SuperAdmin}, {RoleConsts.Admin}")]
     [Route(RouteConstants.DeletedArticles)]
     public async Task<IActionResult> DeletedArticle()
     {
@@ -40,6 +42,7 @@ public class ArticleController : BaseController
     }
 
 
+    [Authorize(Roles = $"{RoleConsts.SuperAdmin}, {RoleConsts.Admin}")]
     [Route(RouteConstants.Add)]
     public async Task<IActionResult> Add()
     {
@@ -48,6 +51,7 @@ public class ArticleController : BaseController
     }
 
 
+    [Authorize(Roles = $"{RoleConsts.SuperAdmin}, {RoleConsts.Admin}")]
     [HttpPost(RouteConstants.Add)]
     public async Task<IActionResult> Add(ArticleAddDto articleAddDto)
     {
@@ -66,6 +70,7 @@ public class ArticleController : BaseController
     }
 
 
+    [Authorize(Roles = $"{RoleConsts.SuperAdmin}, {RoleConsts.Admin}")]
     [Route(RouteConstants.Update + "/{articleId:guid}")]
     public async Task<IActionResult> Update(Guid articleId)
     {
@@ -79,6 +84,7 @@ public class ArticleController : BaseController
     }
 
 
+    [Authorize(Roles = $"{RoleConsts.SuperAdmin}, {RoleConsts.Admin}")]
     [HttpPost(RouteConstants.Update + "/{articleId:guid}")]
     public async Task<IActionResult> Update(ArticleUpdateDto articleUpdateDto, Guid articleId)
     {
@@ -97,10 +103,11 @@ public class ArticleController : BaseController
     }
 
 
+    [Authorize(Roles = $"{RoleConsts.SuperAdmin}, {RoleConsts.Admin}")]
     [Route(RouteConstants.Delete)]
     public async Task<IActionResult> Delete(Guid articleId)
     {
-        var result = await _serviceManager.ArticleService.SafeDeleteArticleAsync(articleId);
+        var result = await  _serviceManager.ArticleService.SafeDeleteArticleAsync(articleId);
 
         if (result.ResultStatus == ResultStatus.Success)
         {
@@ -113,6 +120,7 @@ public class ArticleController : BaseController
     }
 
 
+    [Authorize(Roles = $"{RoleConsts.SuperAdmin}, {RoleConsts.Admin}")]
     [Route(RouteConstants.UndoDelete)]
     public async Task<IActionResult> UndoDelete(Guid articleId)
     {
@@ -127,6 +135,8 @@ public class ArticleController : BaseController
         NotificationHelper.ShowError(_toastNotification, result.Message);
         return RedirectToAction(nameof(Index));
     }
+
+
 
 
 

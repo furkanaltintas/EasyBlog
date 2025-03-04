@@ -1,5 +1,9 @@
 ﻿@model List<ArticleListDto>
 
+@{
+    var roleStatus = User.IsInRole("User");
+}
+
 <div class="container-xxl flex-grow-1 container-p-y">
     <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Makale Yönetimi /</span> Makaleler</h4>
     <div class="card">
@@ -12,7 +16,10 @@
                         <th>Kategori</th>
                         <th>Oluşturulma Tarihi</th>
                         <th>Oluşturan</th>
-                        <th>İşlemler</th>
+                        @if (!roleStatus)
+                        {
+                            <th>İşlemler</th>
+                        }
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
@@ -23,30 +30,27 @@
                             <td>@article.Category.Name</td>
                             <td>@article.CreatedDate.ToShortDateString()</td>
                             <td>@article.CreatedBy</td>
-                            <td>
-                                <a asp-action="Update" asp-route-articleId="@article.Id" data-id="@article.Id" class="btn btn-primary btn-sm">
-                                    <i class="bx bxs-edit"></i>
-                                </a>
-                                <a asp-action="Delete" asp-route-articleId="@article.Id" data-id="@article.Id" class="btn btn-danger btn-sm">
-                                    <i class="bx bxs-trash"></i>
-                                </a>
-                            </td>
+                            @if (!roleStatus)
+                            {
+                                <td>
+                                    <a asp-action="Update" asp-route-articleId="@article.Id" data-id="@article.Id" class="btn btn-primary btn-sm">
+                                        <i class="bx bxs-edit"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-articleId="@article.Id" data-id="@article.Id" class="btn btn-danger btn-sm">
+                                        <i class="bx bxs-trash"></i>
+                                    </a>
+                                </td>
+                            }
                         </tr>
                     }
                 </tbody>
-                <tfoot>
-                    <tr>
-                        <th>Başlık</th>
-                        <th>Kategori</th>
-                        <th>Oluşturulma Tarihi</th>
-                        <th>Oluşturan</th>
-                        <th>İşlemler</th>
-                    </tr>
-                </tfoot>
             </table>
         </div>
     </div>
-    <a asp-action="Add" class="btn btn-success mt-2">Makale Ekle</a>
+    @if (!roleStatus)
+    {
+        <a asp-action="Add" class="btn btn-success mt-2">Makale Ekle</a>
+    }
 </div>
 
 @section Scripts {

@@ -5,11 +5,13 @@ using EasyBlog.Web.Areas.Management.Controllers.Base;
 using EasyBlog.Web.Constants;
 using EasyBlog.Web.Extensions;
 using EasyBlog.Web.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
 
 namespace EasyBlog.Web.Areas.Management.Controllers;
 
+[Authorize]
 [Route(RouteConstants.User)]
 public class UserController : BaseController
 {
@@ -21,6 +23,7 @@ public class UserController : BaseController
     {
         _toastNotification = toastNotification;
     }
+
 
     public async Task<IActionResult> Index()
     {
@@ -75,7 +78,25 @@ public class UserController : BaseController
     public async Task<IActionResult> Delete(Guid userId)
     {
         var result = await _serviceManager.UserService.DeleteUserAsync(userId);
-
         return this.ResponseRedirectAction(result, _toastNotification, nameof(Index));
+    }
+
+
+    [Route(RouteConstants.Profile)]
+    public async Task<IActionResult> Profile()
+    {
+        var dataResult = await _serviceManager.UserService.GetUserAsync();
+        return this.ResponseView(dataResult, _toastNotification);
+    }
+
+
+    [HttpPost(RouteConstants.Profile)]
+    public async Task<IActionResult> Profile(UserProfileDto userProfileDto)
+    {
+        var result = await _serviceManager.UserService.ChangeUserAsync(userProfileDto);
+
+        return result.ResultStatus == ResultStatus.Success
+            ? RedirectToAction("Index", "Home", new { Area = "Management" })
+            : View(userProfileDto);
     }
 }

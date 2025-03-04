@@ -1,19 +1,26 @@
 ﻿using EasyBlog.Entity.DTOs.Users;
 using EasyBlog.Service.Services.Managers;
 using EasyBlog.Web.Areas.Management.Controllers.Base;
+using EasyBlog.Web.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EasyBlog.Web.Areas.Management.Controllers;
 
+[Route(RouteConstants.Auth)]
 public class AuthController : BaseController
 {
-    public AuthController(IBaseService serviceManager) : base(serviceManager) { }
+    public AuthController(IBaseService serviceManager) : base(serviceManager)
+    {
+    }
 
-    [HttpGet]
+
+
+    [HttpGet(RouteConstants.Login)]
     public IActionResult Login() => View();
 
-    [HttpPost]
+
+    [HttpPost(RouteConstants.Login)]
     [AllowAnonymous]
     public async Task<IActionResult> Login(UserLoginDto userLoginDto)
     {
@@ -29,7 +36,8 @@ public class AuthController : BaseController
         return View();
     }
 
-    [HttpGet]
+
+    [HttpGet(RouteConstants.Logout)]
     [Authorize]
     public async Task<IActionResult> Logout()
     {
@@ -37,5 +45,13 @@ public class AuthController : BaseController
         HttpContext.Session.Clear();
 
         return RedirectToAction("Index", "Home", new { Area = "" });
+    }
+
+
+    [HttpGet(RouteConstants.AccessDenied)]
+    [Authorize]
+    public async Task<IActionResult> AccessDenied()
+    {
+        return View();
     }
 }

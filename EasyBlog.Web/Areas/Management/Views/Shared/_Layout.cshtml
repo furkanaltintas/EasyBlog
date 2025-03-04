@@ -1,24 +1,4 @@
-﻿@functions {
-    private string IsActive(string controller)
-    {
-        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
-        return currentController.ToLower() == controller.ToLower() ? "active" : string.Empty;
-    }
-}
-
-@{
-    // Context.Request.Path.Value => İstek yapılan Url'nin yolunu verir.
-    // Trim => Yolun başındaki ve sonundaki '/' karakterlerini temizler.
-    // Split => Yolu '/' karakterine göre ayırır ve her bir kısmı bir dizi haline getirir.
-    var segments = Context.Request.Path.Value?.Trim('/').Split('/');
-
-    // Dizinin uzunluğunu kontrol ediyoruz.
-    // Dizinin uzunluğu 1'den fazla ise (yani en az 2 segment varsa), segments[1] kısmını alır.
-    // Dizinin uzunluğu 1 veya daha kısa ise ilk değeri alır.
-    // yonetim[0]/makaleler[1] => 2 değer
-    var secondSegment = segments.Length > 1 ? segments[1] : segments[0];
-}
-
+﻿@using EasyBlog.Web.Helpers
 
 <!DOCTYPE html>
 <html lang="en"
@@ -32,7 +12,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>Dashboard | @secondSegment</title>
+    <title>Dashboard | @UrlHelper.GetSecondSegment(Context.Request)</title>
 
     <meta name="description" content="" />
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
@@ -135,14 +115,14 @@
                 <div class="menu-inner-shadow"></div>
 
                 <ul class="menu-inner py-1">
-                    <li class="menu-item @(IsActive("Home"))">
+                    <li class="menu-item ">
                         <a asp-area="Management" asp-controller="Home" asp-action="Index" class="menu-link">
                             <i class="menu-icon tf-icons bx bxs-dashboard"></i>
                             <div data-i18n="Analytics">Yönetim Sayfası</div>
                         </a>
                     </li>
 
-                    <li class="menu-item @(IsActive("Menu"))">
+                    <li class="menu-item @(UrlHelper.IsActive("Menu", ViewContext))">
                         <a asp-area="Management" asp-controller="Menu" asp-action="Index" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-layout"></i>
                             <div data-i18n="Menu">Navigasyon Yönetimi</div>
@@ -151,46 +131,48 @@
 
 
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">İçerik Yönetimi</span></li>
-                    <li class="menu-item @(IsActive("Article"))">
+                    <li class="menu-item @(UrlHelper.IsActive("Article", ViewContext))">
                         <a asp-area="Management" asp-controller="Article" asp-action="Index" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-dock-top"></i>
                             <div data-i18n="Article">Blog Yönetimi</div>
                         </a>
                     </li>
 
-                    <li class="menu-item @(IsActive("Category"))">
+                    <li class="menu-item @(UrlHelper.IsActive("Category", ViewContext))">
                         <a asp-area="Management" asp-controller="Category" asp-action="Index" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-dock-top"></i>
                             <div data-i18n="Category">Kategori Yönetimi</div>
                         </a>
                     </li>
 
-                    <li class="menu-item @(IsActive("SocialMedia"))">
+                    <li class="menu-item  @(UrlHelper.IsActive("SocialMedia", ViewContext))">
                         <a asp-area="Management" asp-controller="SocialMedia" asp-action="Index" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-dock-top"></i>
                             <div data-i18n="SocialMedia">Medya Yönetimi</div>
                         </a>
                     </li>
 
+                    @if (User.IsInRole(EasyBlog.Web.Constants.RoleConsts.SuperAdmin))
+                    {
+                        <li class="menu-header small text-uppercase"><span class="menu-header-text">KULLANICILAR</span></li>
+                        <li class="menu-item  @(UrlHelper.IsActive("User", ViewContext))">
+                            <a asp-area="Management" asp-controller="User" asp-action="Index" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-user"></i>
+                                <div data-i18n="User">Kullanıcılar</div>
+                            </a>
+                        </li>
 
-                    <li class="menu-header small text-uppercase"><span class="menu-header-text">KULLANICILAR</span></li>
-                    <li class="menu-item @(IsActive("User"))">
-                        <a asp-area="Management" asp-controller="User" asp-action="Index" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-user"></i>
-                            <div data-i18n="User">Kullanıcılar</div>
-                        </a>
-                    </li>
-
-                    <li class="menu-item @(IsActive("Role"))">
-                        <a asp-area="Management" asp-controller="Role" asp-action="Index" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
-                            <div data-i18n="Role">Roller</div>
-                        </a>
-                    </li>
-
+                        <li class="menu-item  @(UrlHelper.IsActive("Role", ViewContext))">
+                            <a asp-area="Management" asp-controller="Role" asp-action="Index" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
+                                <div data-i18n="Role">Roller</div>
+                            </a>
+                        </li>
+                    }
 
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">AYARLAR</span></li>
-                    <li class="menu-item @(IsActive("Smtp"))">
+
+                    <li class="menu-item  @(UrlHelper.IsActive("Smtp", ViewContext))">
                         <a asp-area="Management" asp-controller="Smtp" asp-action="Index" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-cog"></i>
                             <div data-i18n="Smtp">Smtp Ayarları</div>
@@ -212,17 +194,17 @@
                         </a>
 
                         <ul class="menu-sub">
-                            <li class="menu-item">
+                            <li class="menu-item @(UrlHelper.IsActive("Smtp", ViewContext, "DeletedArticle"))">
                                 <a asp-area="Management" asp-controller="Article" asp-action="DeletedArticle" class="menu-link">
                                     <div data-i18n="Article">Makale</div>
                                 </a>
                             </li>
-                            <li class="menu-item">
+                            <li class="menu-item @(UrlHelper.IsActive("Smtp", ViewContext, "DeletedCategories"))">
                                 <a asp-area="Management" asp-controller="Category" asp-action="DeletedCategories" class="menu-link">
                                     <div data-i18n="Article">Kategori</div>
                                 </a>
                             </li>
-                            <li class="menu-item">
+                            <li class="menu-item @(UrlHelper.IsActive("Smtp", ViewContext, "DeletedMedias"))">
                                 <a asp-area="Management" asp-controller="SocialMedia" asp-action="DeletedMedias" class="menu-link">
                                     <div data-i18n="Article">Medya</div>
                                 </a>
@@ -269,63 +251,7 @@
                             </li>
 
                             <!-- User -->
-                            <li class="nav-item navbar-dropdown dropdown-user dropdown">
-                                <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-                                    <div class="avatar avatar-online">
-                                        <img src="~/sneat/assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
-                                    </div>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li>
-                                        <a class="dropdown-item" href="#">
-                                            <div class="d-flex">
-                                                <div class="flex-shrink-0 me-3">
-                                                    <div class="avatar avatar-online">
-                                                        <img src="~/sneat/assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
-                                                    </div>
-                                                </div>
-                                                <div class="flex-grow-1">
-                                                    <span class="fw-semibold d-block">John Doe</span>
-                                                    <small class="text-muted">Admin</small>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <div class="dropdown-divider"></div>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#">
-                                            <i class="bx bx-user me-2"></i>
-                                            <span class="align-middle">My Profile</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#">
-                                            <i class="bx bx-cog me-2"></i>
-                                            <span class="align-middle">Settings</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="#">
-                                            <span class="d-flex align-items-center align-middle">
-                                                <i class="flex-shrink-0 bx bx-credit-card me-2"></i>
-                                                <span class="flex-grow-1 align-middle">Billing</span>
-                                                <span class="flex-shrink-0 badge badge-center rounded-pill bg-danger w-px-20 h-px-20">4</span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <div class="dropdown-divider"></div>
-                                    </li>
-                                    <li>
-                                        <a asp-area="Management" asp-controller="Auth" asp-action="Logout" class="dropdown-item">
-                                            <i class="bx bx-power-off me-2"></i>
-                                            <span class="align-middle">Log Out</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
+                            @await Component.InvokeAsync("DashboardHeader")
                             <!--/ User -->
                         </ul>
                     </div>

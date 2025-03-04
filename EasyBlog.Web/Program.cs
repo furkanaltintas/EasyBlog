@@ -45,11 +45,13 @@ builder.Services.LoadServiceExtension();
 #endregion
 
 #region Identity & Cookie
-builder.Services.AddIdentity<AppUser, AppRole>(action =>
+builder.Services.AddIdentity<AppUser, AppRole>(options =>
 {
-    action.Password.RequireNonAlphanumeric = false;
-    action.Password.RequireLowercase = false;
-    action.Password.RequireUppercase = false;
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 8;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
 })
     .AddRoleManager<RoleManager<AppRole>>()
     .AddErrorDescriber<CustomIdentityErrorDescriber>()
