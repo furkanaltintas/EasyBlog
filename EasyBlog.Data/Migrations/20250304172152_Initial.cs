@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -91,7 +92,7 @@ namespace EasyBlog.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ImageId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ImageId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -117,7 +118,7 @@ namespace EasyBlog.Data.Migrations
                         column: x => x.ImageId,
                         principalTable: "Images",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -158,7 +159,8 @@ namespace EasyBlog.Data.Migrations
                         name: "FK_Articles_Images_ImageId",
                         column: x => x.ImageId,
                         principalTable: "Images",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -251,9 +253,9 @@ namespace EasyBlog.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { new Guid("40a173ea-1326-41eb-927a-3729c7277be7"), "c042f8a6-01b5-4063-96e3-2d025b1bb409", "Admin", "ADMIN" },
-                    { new Guid("7e35da39-e96c-4113-8d4b-4f7fed9d8ebb"), "b2ccb897-bc3d-4082-947f-73a9cd4c4b3e", "User", "USER" },
-                    { new Guid("d67d8f29-6ff0-4e7b-b582-c51b34618674"), "b8b441bb-d69d-4307-8023-8418f75cc3e6", "SuperAdmin", "SUPERADMIN" }
+                    { new Guid("40a173ea-1326-41eb-927a-3729c7277be7"), "16018b51-7f69-4e19-9096-27b6f2355ab1", "Admin", "ADMIN" },
+                    { new Guid("7e35da39-e96c-4113-8d4b-4f7fed9d8ebb"), "746f2c4a-930a-4f1d-a0ea-48a72ac20c8a", "User", "USER" },
+                    { new Guid("d67d8f29-6ff0-4e7b-b582-c51b34618674"), "7479bcba-d28a-430a-a714-00c98532c15a", "SuperAdmin", "SUPERADMIN" }
                 });
 
             migrationBuilder.InsertData(
@@ -261,8 +263,8 @@ namespace EasyBlog.Data.Migrations
                 columns: new[] { "Id", "CreatedBy", "CreatedDate", "DeletedBy", "DeletedDate", "IsDeleted", "ModifiedBy", "ModifiedDate", "Name" },
                 values: new object[,]
                 {
-                    { new Guid("58456306-9248-4cd3-b0aa-f7c9c53c5d5e"), "Admin Test", new DateTime(2025, 3, 1, 13, 34, 1, 128, DateTimeKind.Utc).AddTicks(1639), "", null, false, "", null, "Lorem Ipsum Category 1" },
-                    { new Guid("d0a592ee-589e-4d43-a83d-0e60dc239368"), "Admin Test", new DateTime(2025, 3, 1, 13, 34, 1, 128, DateTimeKind.Utc).AddTicks(5846), "", null, false, "", null, "Lorem Ipsum Category 2" }
+                    { new Guid("58456306-9248-4cd3-b0aa-f7c9c53c5d5e"), "Admin Test", new DateTime(2025, 3, 4, 17, 21, 51, 598, DateTimeKind.Utc).AddTicks(2145), "", null, false, "", null, "Lorem Ipsum Category 1" },
+                    { new Guid("d0a592ee-589e-4d43-a83d-0e60dc239368"), "Admin Test", new DateTime(2025, 3, 4, 17, 21, 51, 598, DateTimeKind.Utc).AddTicks(6071), "", null, false, "", null, "Lorem Ipsum Category 2" }
                 });
 
             migrationBuilder.InsertData(
@@ -270,8 +272,8 @@ namespace EasyBlog.Data.Migrations
                 columns: new[] { "Id", "CreatedBy", "CreatedDate", "DeletedBy", "DeletedDate", "FileName", "FileType", "IsDeleted", "ModifiedBy", "ModifiedDate" },
                 values: new object[,]
                 {
-                    { new Guid("007d16d1-37d2-4400-943e-2452059151de"), "Admin User", new DateTime(2025, 3, 1, 13, 34, 1, 129, DateTimeKind.Utc).AddTicks(8736), "", null, "images/test2", "jpeg", false, "", null },
-                    { new Guid("b29b4e06-e84d-4bb2-b4d4-dc02725f8398"), "Admin User", new DateTime(2025, 3, 1, 13, 34, 1, 129, DateTimeKind.Utc).AddTicks(3858), "", null, "images/test1", "jpg", false, "", null }
+                    { new Guid("007d16d1-37d2-4400-943e-2452059151de"), "Admin User", new DateTime(2025, 3, 4, 17, 21, 51, 600, DateTimeKind.Utc).AddTicks(4591), "", null, "images/test2", "jpeg", false, "", null },
+                    { new Guid("b29b4e06-e84d-4bb2-b4d4-dc02725f8398"), "Admin User", new DateTime(2025, 3, 4, 17, 21, 51, 600, DateTimeKind.Utc).AddTicks(57), "", null, "images/test1", "jpg", false, "", null }
                 });
 
             migrationBuilder.InsertData(
@@ -279,8 +281,8 @@ namespace EasyBlog.Data.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "ImageId", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { new Guid("330ade9e-ae19-4376-9b14-fdfc3f71fb4c"), 0, "d56a693f-1bf1-4366-aeed-04c68f890971", "admin@gmail.com", false, "Berke", new Guid("007d16d1-37d2-4400-943e-2452059151de"), "Altıntaş", false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEEfi/psZdGbVP0rxK6sMDxUaPhcDT/Z4zIkUfxsHQz2aRJ/KpDAV31p2GrLFrg6eqg==", "+905555555556", false, "3c07ac6d-2cb6-4ed2-a245-82f662ae3110", false, "admin@gmail.com" },
-                    { new Guid("4fcc7985-f39b-4c50-ad1c-ade5d0df8279"), 0, "376c3e9d-a61a-4182-b512-97aa88d819f8", "superadmin@gmail.com", true, "Furkan", new Guid("b29b4e06-e84d-4bb2-b4d4-dc02725f8398"), "Altıntaş", false, null, "SUPERADMIN@GMAIL.COM", "SUPERADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEEqBNMS+fr4McRmc6gltWDC1R1B1wP3ZliX64jTF8Tsz8obuBPPutPkeyLEzWa7c5A==", "+905555555555", true, "0ef82fb4-ff38-4a9b-bfc0-73742d822761", false, "superadmin@gmail.com" }
+                    { new Guid("330ade9e-ae19-4376-9b14-fdfc3f71fb4c"), 0, "00707e03-23ee-4789-8117-c24e86f3be84", "admin@gmail.com", false, "Berke", new Guid("007d16d1-37d2-4400-943e-2452059151de"), "Altıntaş", false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEJTy4gI/40y/B4Ml8UtOuP3h3Ed7ghTNLX6zNzvjtDUdWqa5Sp6n1GkXjer6tG1eVw==", "+905555555556", false, "09fb6635-8025-49f4-acd1-d8b0fb513ad4", false, "admin@gmail.com" },
+                    { new Guid("4fcc7985-f39b-4c50-ad1c-ade5d0df8279"), 0, "891ee386-98cf-418a-b24f-e50d66050428", "superadmin@gmail.com", true, "Furkan", new Guid("b29b4e06-e84d-4bb2-b4d4-dc02725f8398"), "Altıntaş", false, null, "SUPERADMIN@GMAIL.COM", "SUPERADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEDCGbZZt0GKwW1bVkSDpyEqE6dmvUtbGT61h1Gue7HsuPIRl+F+17PYhJ5+LnVg9hg==", "+905555555555", true, "9c8dfe68-ae4d-478d-af1a-3ba31000c378", false, "superadmin@gmail.com" }
                 });
 
             migrationBuilder.InsertData(
@@ -288,8 +290,8 @@ namespace EasyBlog.Data.Migrations
                 columns: new[] { "Id", "CategoryId", "Content", "CreatedBy", "CreatedDate", "DeletedBy", "DeletedDate", "ImageId", "IsDeleted", "ModifiedBy", "ModifiedDate", "Title", "UserId", "ViewCount" },
                 values: new object[,]
                 {
-                    { new Guid("09f41f40-30c7-4291-9999-b5ee08fbf391"), new Guid("d0a592ee-589e-4d43-a83d-0e60dc239368"), "Lorem Ipsum 2 is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.", "Admin User", new DateTime(2025, 3, 1, 13, 34, 1, 127, DateTimeKind.Utc).AddTicks(703), "", null, new Guid("007d16d1-37d2-4400-943e-2452059151de"), false, "", null, "Lorem Ipsum 2", new Guid("330ade9e-ae19-4376-9b14-fdfc3f71fb4c"), 15 },
-                    { new Guid("8ee35582-3f45-4eaa-8361-534d0521e746"), new Guid("58456306-9248-4cd3-b0aa-f7c9c53c5d5e"), "Lorem Ipsum 1 is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.", "Admin User", new DateTime(2025, 3, 1, 13, 34, 1, 126, DateTimeKind.Utc).AddTicks(4553), "", null, new Guid("b29b4e06-e84d-4bb2-b4d4-dc02725f8398"), false, "", null, "Lorem Ipsum 1", new Guid("4fcc7985-f39b-4c50-ad1c-ade5d0df8279"), 15 }
+                    { new Guid("816101ce-ce06-4ac1-848b-3ebc89e2522f"), new Guid("58456306-9248-4cd3-b0aa-f7c9c53c5d5e"), "Lorem Ipsum 1 is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.", "Admin User", new DateTime(2025, 3, 4, 17, 21, 51, 596, DateTimeKind.Utc).AddTicks(4292), "", null, new Guid("b29b4e06-e84d-4bb2-b4d4-dc02725f8398"), false, "", null, "Lorem Ipsum 1", new Guid("4fcc7985-f39b-4c50-ad1c-ade5d0df8279"), 15 },
+                    { new Guid("adb2a019-fc0d-4fe6-92a8-eee6b3f84d97"), new Guid("d0a592ee-589e-4d43-a83d-0e60dc239368"), "Lorem Ipsum 2 is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.", "Admin User", new DateTime(2025, 3, 4, 17, 21, 51, 597, DateTimeKind.Utc).AddTicks(60), "", null, new Guid("007d16d1-37d2-4400-943e-2452059151de"), false, "", null, "Lorem Ipsum 2", new Guid("330ade9e-ae19-4376-9b14-fdfc3f71fb4c"), 15 }
                 });
 
             migrationBuilder.InsertData(

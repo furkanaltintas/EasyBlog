@@ -19,6 +19,22 @@ public class ImageMap : IEntityTypeConfiguration<Image>
             .HasMaxLength((int)MaxLength.Tiny)
             .IsRequired();
 
+
+
+        // AppUser ve Image arasındaki ilişkiyi yapılandır
+        builder.HasMany(i => i.Users)
+            .WithOne(u => u.Image)
+            .HasForeignKey(u => u.ImageId)
+            .OnDelete(DeleteBehavior.SetNull); // Image silindiğinde ImageId NULL olur
+
+        // Article ve Image arasındaki ilişkiyi yapılandır
+        builder.HasMany(i => i.Articles)
+            .WithOne(a => a.Image)
+            .HasForeignKey(a => a.ImageId)
+            .OnDelete(DeleteBehavior.SetNull); // Image silindiğinde ImageId NULL olur
+
+
+
         builder.HasData(
             new()
             {

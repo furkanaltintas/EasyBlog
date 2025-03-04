@@ -11,15 +11,21 @@ public class ArticleMap : IEntityTypeConfiguration<Article>
     {
         builder.HasKey(a => a.Id);
 
-        builder.Property(a => a.Title)
+        builder
+            .Property(a => a.Title)
             .HasMaxLength((int)MaxLength.Medium)
             .IsRequired();
 
-        builder.Property(a => a.Content)
+        builder
+            .Property(a => a.Content)
             .HasMaxLength((int)MaxLength.MaximumLong)
             .IsRequired();
 
-
+        builder
+            .HasOne(a => a.Image)
+            .WithMany(i => i.Articles)
+            .HasForeignKey(a => a.ImageId)
+            .OnDelete(DeleteBehavior.SetNull);
 
         // Örnek Data
         builder.HasData(new Article

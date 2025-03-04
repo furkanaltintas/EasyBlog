@@ -53,21 +53,21 @@ namespace EasyBlog.Data.Migrations
                         new
                         {
                             Id = new Guid("d67d8f29-6ff0-4e7b-b582-c51b34618674"),
-                            ConcurrencyStamp = "b8b441bb-d69d-4307-8023-8418f75cc3e6",
+                            ConcurrencyStamp = "7479bcba-d28a-430a-a714-00c98532c15a",
                             Name = "SuperAdmin",
                             NormalizedName = "SUPERADMIN"
                         },
                         new
                         {
                             Id = new Guid("40a173ea-1326-41eb-927a-3729c7277be7"),
-                            ConcurrencyStamp = "c042f8a6-01b5-4063-96e3-2d025b1bb409",
+                            ConcurrencyStamp = "16018b51-7f69-4e19-9096-27b6f2355ab1",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = new Guid("7e35da39-e96c-4113-8d4b-4f7fed9d8ebb"),
-                            ConcurrencyStamp = "b2ccb897-bc3d-4082-947f-73a9cd4c4b3e",
+                            ConcurrencyStamp = "746f2c4a-930a-4f1d-a0ea-48a72ac20c8a",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -121,7 +121,7 @@ namespace EasyBlog.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("ImageId")
+                    b.Property<Guid?>("ImageId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("LastName")
@@ -180,7 +180,7 @@ namespace EasyBlog.Data.Migrations
                         {
                             Id = new Guid("4fcc7985-f39b-4c50-ad1c-ade5d0df8279"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "376c3e9d-a61a-4182-b512-97aa88d819f8",
+                            ConcurrencyStamp = "891ee386-98cf-418a-b24f-e50d66050428",
                             Email = "superadmin@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Furkan",
@@ -189,10 +189,10 @@ namespace EasyBlog.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPERADMIN@GMAIL.COM",
                             NormalizedUserName = "SUPERADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEqBNMS+fr4McRmc6gltWDC1R1B1wP3ZliX64jTF8Tsz8obuBPPutPkeyLEzWa7c5A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDCGbZZt0GKwW1bVkSDpyEqE6dmvUtbGT61h1Gue7HsuPIRl+F+17PYhJ5+LnVg9hg==",
                             PhoneNumber = "+905555555555",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "0ef82fb4-ff38-4a9b-bfc0-73742d822761",
+                            SecurityStamp = "9c8dfe68-ae4d-478d-af1a-3ba31000c378",
                             TwoFactorEnabled = false,
                             UserName = "superadmin@gmail.com"
                         },
@@ -200,7 +200,7 @@ namespace EasyBlog.Data.Migrations
                         {
                             Id = new Guid("330ade9e-ae19-4376-9b14-fdfc3f71fb4c"),
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d56a693f-1bf1-4366-aeed-04c68f890971",
+                            ConcurrencyStamp = "00707e03-23ee-4789-8117-c24e86f3be84",
                             Email = "admin@gmail.com",
                             EmailConfirmed = false,
                             FirstName = "Berke",
@@ -209,10 +209,10 @@ namespace EasyBlog.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEfi/psZdGbVP0rxK6sMDxUaPhcDT/Z4zIkUfxsHQz2aRJ/KpDAV31p2GrLFrg6eqg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJTy4gI/40y/B4Ml8UtOuP3h3Ed7ghTNLX6zNzvjtDUdWqa5Sp6n1GkXjer6tG1eVw==",
                             PhoneNumber = "+905555555556",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3c07ac6d-2cb6-4ed2-a245-82f662ae3110",
+                            SecurityStamp = "09fb6635-8025-49f4-acd1-d8b0fb513ad4",
                             TwoFactorEnabled = false,
                             UserName = "admin@gmail.com"
                         });
@@ -376,11 +376,11 @@ namespace EasyBlog.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("8ee35582-3f45-4eaa-8361-534d0521e746"),
+                            Id = new Guid("816101ce-ce06-4ac1-848b-3ebc89e2522f"),
                             CategoryId = new Guid("58456306-9248-4cd3-b0aa-f7c9c53c5d5e"),
                             Content = "Lorem Ipsum 1 is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
                             CreatedBy = "Admin User",
-                            CreatedDate = new DateTime(2025, 3, 1, 13, 34, 1, 126, DateTimeKind.Utc).AddTicks(4553),
+                            CreatedDate = new DateTime(2025, 3, 4, 17, 21, 51, 596, DateTimeKind.Utc).AddTicks(4292),
                             DeletedBy = "",
                             ImageId = new Guid("b29b4e06-e84d-4bb2-b4d4-dc02725f8398"),
                             IsDeleted = false,
@@ -391,11 +391,11 @@ namespace EasyBlog.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("09f41f40-30c7-4291-9999-b5ee08fbf391"),
+                            Id = new Guid("adb2a019-fc0d-4fe6-92a8-eee6b3f84d97"),
                             CategoryId = new Guid("d0a592ee-589e-4d43-a83d-0e60dc239368"),
                             Content = "Lorem Ipsum 2 is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
                             CreatedBy = "Admin User",
-                            CreatedDate = new DateTime(2025, 3, 1, 13, 34, 1, 127, DateTimeKind.Utc).AddTicks(703),
+                            CreatedDate = new DateTime(2025, 3, 4, 17, 21, 51, 597, DateTimeKind.Utc).AddTicks(60),
                             DeletedBy = "",
                             ImageId = new Guid("007d16d1-37d2-4400-943e-2452059151de"),
                             IsDeleted = false,
@@ -448,7 +448,7 @@ namespace EasyBlog.Data.Migrations
                         {
                             Id = new Guid("58456306-9248-4cd3-b0aa-f7c9c53c5d5e"),
                             CreatedBy = "Admin Test",
-                            CreatedDate = new DateTime(2025, 3, 1, 13, 34, 1, 128, DateTimeKind.Utc).AddTicks(1639),
+                            CreatedDate = new DateTime(2025, 3, 4, 17, 21, 51, 598, DateTimeKind.Utc).AddTicks(2145),
                             DeletedBy = "",
                             IsDeleted = false,
                             ModifiedBy = "",
@@ -458,7 +458,7 @@ namespace EasyBlog.Data.Migrations
                         {
                             Id = new Guid("d0a592ee-589e-4d43-a83d-0e60dc239368"),
                             CreatedBy = "Admin Test",
-                            CreatedDate = new DateTime(2025, 3, 1, 13, 34, 1, 128, DateTimeKind.Utc).AddTicks(5846),
+                            CreatedDate = new DateTime(2025, 3, 4, 17, 21, 51, 598, DateTimeKind.Utc).AddTicks(6071),
                             DeletedBy = "",
                             IsDeleted = false,
                             ModifiedBy = "",
@@ -513,7 +513,7 @@ namespace EasyBlog.Data.Migrations
                         {
                             Id = new Guid("b29b4e06-e84d-4bb2-b4d4-dc02725f8398"),
                             CreatedBy = "Admin User",
-                            CreatedDate = new DateTime(2025, 3, 1, 13, 34, 1, 129, DateTimeKind.Utc).AddTicks(3858),
+                            CreatedDate = new DateTime(2025, 3, 4, 17, 21, 51, 600, DateTimeKind.Utc).AddTicks(57),
                             DeletedBy = "",
                             FileName = "images/test1",
                             FileType = "jpg",
@@ -524,7 +524,7 @@ namespace EasyBlog.Data.Migrations
                         {
                             Id = new Guid("007d16d1-37d2-4400-943e-2452059151de"),
                             CreatedBy = "Admin User",
-                            CreatedDate = new DateTime(2025, 3, 1, 13, 34, 1, 129, DateTimeKind.Utc).AddTicks(8736),
+                            CreatedDate = new DateTime(2025, 3, 4, 17, 21, 51, 600, DateTimeKind.Utc).AddTicks(4591),
                             DeletedBy = "",
                             FileName = "images/test2",
                             FileType = "jpeg",
@@ -547,8 +547,7 @@ namespace EasyBlog.Data.Migrations
                     b.HasOne("EasyBlog.Entity.Entities.Image", "Image")
                         .WithMany("Users")
                         .HasForeignKey("ImageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Image");
                 });
@@ -605,7 +604,8 @@ namespace EasyBlog.Data.Migrations
 
                     b.HasOne("EasyBlog.Entity.Entities.Image", "Image")
                         .WithMany("Articles")
-                        .HasForeignKey("ImageId");
+                        .HasForeignKey("ImageId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("EasyBlog.Entity.Entities.AppUser", "User")
                         .WithMany("Articles")

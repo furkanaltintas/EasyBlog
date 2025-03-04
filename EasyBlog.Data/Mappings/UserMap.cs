@@ -44,6 +44,12 @@ public class UserMap : IEntityTypeConfiguration<AppUser>
         builder.HasMany<AppUserRole>().WithOne().HasForeignKey(ur => ur.UserId).IsRequired();
 
 
+        builder
+            .HasOne(u => u.Image)
+            .WithMany(i => i.Users)
+            .HasForeignKey(a => a.ImageId)
+            .OnDelete(DeleteBehavior.SetNull);
+
         #region Data
         // SuperAdmin
         var superAdmin = new AppUser
