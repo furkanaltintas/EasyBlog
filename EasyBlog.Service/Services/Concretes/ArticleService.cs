@@ -77,6 +77,14 @@ public class ArticleService : RepositoryService, IArticleService
         return new DataResult<List<ArticleListDto>>(ResultStatus.Error, Messages.Article.NotFound(true), new());
     }
 
+    public async Task<IDataResult<IList<ArticleListDto>>> GetAllArticlesWithCategoryDeletedAsync()
+    {
+        var articles = await _unitOfWork.GetRepository<Article>().GetAllAsync(a => a.IsDeleted, a => a.Category);
+        var articleListDtos = _mapper.Map<List<ArticleListDto>>(articles);
+
+        return new DataResult<List<ArticleListDto>>(ResultStatus.Success, articleListDtos);
+    }
+
     public async Task<IDataResult<ArticleUpdateDto>> GetArticleForUpdateAsync(Guid articleId)
     {
         var dataResult = await GetArticleAsync(articleId);
@@ -119,6 +127,19 @@ public class ArticleService : RepositoryService, IArticleService
         }
 
         return new Result(ResultStatus.Error, Messages.Article.NotFoundById(articleId));
+    }
+
+    public async Task<IResult> UndoDeleteArticleAsync(Guid articleId)
+    {
+        var article = await _unitOfWork.GetRepository<Article>().GetByGuidAsync(articleId);
+        article.IsDeleted = false;
+        article.DeletedDate = null;
+        article.DeletedBy = null;
+
+        await _unitOfWork.GetRepository<Article>().UpdateAsync(article);
+        await _unitOfWork.SaveAsync();
+
+        return new Result(ResultStatus.Success, Messages.Article.UndoDelete(article.Title));
     }
 
     public async Task<IDataResult<ArticleUpdateDto>> UpdateArticleAsync(ArticleUpdateDto articleUpdateDto)

@@ -26,6 +26,13 @@ public class CategoryController : BaseController
         return View(dataResult.Data);
     }
 
+    [Route(RouteConstants.DeletedCategories)]
+    public async Task<IActionResult> DeletedCategories()
+    {
+        var dataResult = await _serviceManager.CategoryService.GetAllCategoriesDeletedAsync();
+
+        return View(dataResult.Data);
+    }
 
     [Route(RouteConstants.Add)]
     public IActionResult Add()
@@ -94,6 +101,21 @@ public class CategoryController : BaseController
     public async Task<IActionResult> Delete(Guid categoryId)
     {
         var result = await _serviceManager.CategoryService.SafeDeleteCategoryAsync(categoryId);
+
+        if (result.ResultStatus == ResultStatus.Success)
+        {
+            NotificationHelper.ShowSuccess(_toastNotification, result.Message);
+            return RedirectToAction(nameof(Index));
+        }
+
+        NotificationHelper.ShowError(_toastNotification, result.Message);
+        return RedirectToAction(nameof(Index));
+    }
+
+    [Route(RouteConstants.UndoDelete)]
+    public async Task<IActionResult> UndoDelete(Guid categoryId)
+    {
+        var result = await _serviceManager.CategoryService.UndoDeleteCategoryAsync(categoryId);
 
         if (result.ResultStatus == ResultStatus.Success)
         {

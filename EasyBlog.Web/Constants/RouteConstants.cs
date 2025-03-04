@@ -5,8 +5,12 @@ public static class RouteConstants
     public const string Add = "ekleme";
     public const string Update = "guncelleme";
     public const string Delete = "silme";
+    public const string UndoDelete = "geri-al";
 
     public const string Article = "makaleler";
     public const string Category = "kategoriler";
     public const string User = "kullanicilar";
+
+    public const string DeletedArticles = "silinmis-makaleler";
+    public const string DeletedCategories = "silinmis-kategoriler";
 }

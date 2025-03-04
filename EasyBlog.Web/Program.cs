@@ -5,6 +5,7 @@ using EasyBlog.Data.Context;
 using EasyBlog.Data.Extensions;
 using EasyBlog.Entity.Entities;
 using EasyBlog.Service.Aspects;
+using EasyBlog.Service.Describers;
 using EasyBlog.Service.Extensions;
 using EasyBlog.Service.Services.Concretes;
 using EasyBlog.Service.ValidationRules.FluentValidation;
@@ -51,6 +52,7 @@ builder.Services.AddIdentity<AppUser, AppRole>(action =>
     action.Password.RequireUppercase = false;
 })
     .AddRoleManager<RoleManager<AppRole>>()
+    .AddErrorDescriber<CustomIdentityErrorDescriber>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 

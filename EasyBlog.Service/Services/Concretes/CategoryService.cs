@@ -29,6 +29,14 @@ public class CategoryService : RepositoryService, ICategoryService
         return new Result(ResultStatus.Success, Messages.Category.Add(categoryAddDto.Name));
     }
 
+    public async Task<IDataResult<IList<CategoryListDto>>> GetAllCategoriesDeletedAsync()
+    {
+        var categories = await _unitOfWork.GetRepository<Category>().GetAllAsync(c => c.IsDeleted);
+        var categoryListDtos = _mapper.Map<List<CategoryListDto>>(categories);
+
+        return new DataResult<List<CategoryListDto>>(ResultStatus.Success, categoryListDtos);
+    }
+
     public async Task<IDataResult<IList<CategoryListDto>>> GetAllCategoriesNonDeletedAsync()
     {
         var categories = await _unitOfWork.GetRepository<Category>().GetAllAsync(c => !c.IsDeleted);
@@ -70,6 +78,22 @@ public class CategoryService : RepositoryService, ICategoryService
         await _unitOfWork.GetRepository<Category>().DeleteAsync(category);
         await _unitOfWork.SaveAsync();
         return new Result(ResultStatus.Success, Messages.Category.Delete(category.Name));
+    }
+
+    public async Task<IResult> UndoDeleteCategoryAsync(Guid categoryId)
+    {
+        var category = await _unitOfWork.GetRepository<Category>().GetAsync(c => c.Id == categoryId);
+
+        if (category == null)
+            return new Result(ResultStatus.Error, Messages.Category.NotFoundById(categoryId));
+
+        category.IsDeleted = false;
+        category.DeletedDate = null;
+        category.DeletedBy = null;
+
+        await _unitOfWork.GetRepository<Category>().UpdateAsync(category);
+        await _unitOfWork.SaveAsync();
+        return new Result(ResultStatus.Success, Messages.Category.UndoDelete(category.Name));
     }
 
     public async Task<IResult> UpdateCategoryAsync(CategoryUpdateDto categoryUpdateDto, Guid categoryId)

@@ -31,6 +31,15 @@ public class ArticleController : BaseController
     }
 
 
+    [Route(RouteConstants.DeletedArticles)]
+    public async Task<IActionResult> DeletedArticle()
+    {
+        var result = await _serviceManager.ArticleService.GetAllArticlesWithCategoryDeletedAsync();
+        if (result.ResultStatus == ResultStatus.Success) return View(result.Data);
+        else return View(result.Data);
+    }
+
+
     [Route(RouteConstants.Add)]
     public async Task<IActionResult> Add()
     {
@@ -92,6 +101,22 @@ public class ArticleController : BaseController
     public async Task<IActionResult> Delete(Guid articleId)
     {
         var result = await _serviceManager.ArticleService.SafeDeleteArticleAsync(articleId);
+
+        if (result.ResultStatus == ResultStatus.Success)
+        {
+            NotificationHelper.ShowSuccess(_toastNotification, result.Message);
+            return RedirectToAction(nameof(Index));
+        }
+
+        NotificationHelper.ShowError(_toastNotification, result.Message);
+        return RedirectToAction(nameof(Index));
+    }
+
+
+    [Route(RouteConstants.UndoDelete)]
+    public async Task<IActionResult> UndoDelete(Guid articleId)
+    {
+        var result = await _serviceManager.ArticleService.UndoDeleteArticleAsync(articleId);
 
         if (result.ResultStatus == ResultStatus.Success)
         {
