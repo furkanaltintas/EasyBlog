@@ -33,7 +33,7 @@ public class ArticleService : RepositoryService, IArticleService
         IImageHelper imageHelper) : base(mapper, unitOfWork)
     {
         _httpContextAccessor = httpContextAccessor;
-        _user = httpContextAccessor.HttpContext?.User ?? new ClaimsPrincipal();
+        _user = _httpContextAccessor.HttpContext?.User ?? new ClaimsPrincipal();
         _imageHelper = imageHelper;
     }
 

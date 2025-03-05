@@ -22,15 +22,14 @@ public class UserProfileService : IUserProfileService
     private readonly SignInManager<AppUser> _signInManager;
     private readonly Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor;
 
-    public UserProfileService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IImageService imageService, Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor, ClaimsPrincipal user, IMapper mapper)
+    public UserProfileService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IImageService imageService, Microsoft.AspNetCore.Http.IHttpContextAccessor httpContextAccessor, IMapper mapper)
     {
         _mapper = mapper;
         _userManager = userManager;
         _imageService = imageService;
         _signInManager = signInManager;
         _httpContextAccessor = httpContextAccessor;
-        _user = httpContextAccessor.HttpContext?.User ?? new ClaimsPrincipal();
-
+        _user = _httpContextAccessor.HttpContext?.User ?? new ClaimsPrincipal();
     }
 
 
