@@ -19,7 +19,7 @@ public class ArticleAddDtoValidator : AbstractValidator<ArticleAddDto>
             .NotEmpty()
             .NotNull()
             .MinimumLength(3)
-            .MaximumLength((int)MaxLength.Medium)
+            .MaximumLength((int)MaxLength.MaximumLong)
             .WithName("İçerik");
     }
 }
