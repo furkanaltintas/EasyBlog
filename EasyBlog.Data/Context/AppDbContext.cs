@@ -18,6 +18,7 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid, AppUserCla
     public DbSet<Article> Articles { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Image> Images { get; set; }
+    public DbSet<Visitor> Visitors { get; set; }
     #endregion
 
 

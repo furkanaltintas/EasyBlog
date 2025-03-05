@@ -38,7 +38,7 @@ public class ImageMap : IEntityTypeConfiguration<Image>
         builder.HasData(
             new()
             {
-                Id = Guid.Parse("B29B4E06-E84D-4BB2-B4D4-DC02725F8398"),
+                Id = Guid.Parse("10ad367a-71b2-4143-af5f-2400ad04ac50"),
                 FileName = "images/test1",
                 FileType = "jpg",
                 CreatedBy = "Admin User",
@@ -46,7 +46,7 @@ public class ImageMap : IEntityTypeConfiguration<Image>
             },
             new()
             {
-                Id = Guid.Parse("007D16D1-37D2-4400-943E-2452059151DE"),
+                Id = Guid.Parse("007d16d1-37d2-4400-943e-2452059151de"),
                 FileName = "images/test2",
                 FileType = "jpeg",
                 CreatedBy = "Admin User",
