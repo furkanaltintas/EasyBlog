@@ -14,6 +14,7 @@ using EasyBlog.Service.Helpers.Images.Abstractions;
 using EasyBlog.Service.Services.Abstractions;
 using EasyBlog.Service.Services.Managers;
 using EasyBlog.Service.Utilities;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace EasyBlog.Service.Services.Concretes;
@@ -84,7 +85,7 @@ public class ArticleService : RepositoryService, IArticleService
 
     public async Task<IDataResult<ArticleUpdateDto>> GetArticleForUpdateAsync(Guid articleId)
     {
-        var dataResult = await GetArticleAsync(articleId);
+        var dataResult = await GetByArticleAsync(articleId);
 
 
         if (dataResult.ResultStatus == ResultStatus.Success)
@@ -101,7 +102,7 @@ public class ArticleService : RepositoryService, IArticleService
 
     public async Task<IDataResult<ArticleDto>> GetArticleWithCategoryNonDeletedAsync(Guid articleId)
     {
-        var dataResult = await GetArticleAsync(articleId);
+        var dataResult = await GetByArticleAsync(articleId);
 
         if (dataResult.ResultStatus == ResultStatus.Success)
         {
@@ -114,7 +115,7 @@ public class ArticleService : RepositoryService, IArticleService
 
     public async Task<IResult> SafeDeleteArticleAsync(Guid articleId)
     {
-        var dataResult = await GetArticleAsync(articleId);
+        var dataResult = await GetByArticleAsync(articleId);
 
         if (dataResult.Data != null)
         {
@@ -141,7 +142,7 @@ public class ArticleService : RepositoryService, IArticleService
 
     public async Task<IDataResult<ArticleUpdateDto>> UpdateArticleAsync(ArticleUpdateDto articleUpdateDto)
     {
-        var dataResult = await GetArticleAsync(articleUpdateDto.Id);
+        var dataResult = await GetByArticleAsync(articleUpdateDto.Id);
 
         if (dataResult.Data == null)
             return new DataResult<ArticleUpdateDto>(ResultStatus.Error, null);
@@ -165,9 +166,94 @@ public class ArticleService : RepositoryService, IArticleService
         return new DataResult<ArticleUpdateDto>(ResultStatus.Success, Messages.Article.Update(articleUpdateDto.Title), articleUpdateDto);
     }
 
+    public IDataResult<ArticlePaginationDto> GetAllByPaging(Guid? categoryId, int currentPage = 1, int pageSize = 3, bool isAscending = false)
+    {
+        pageSize = pageSize > 20 ? 20 : pageSize;
+
+        var query = GetArticlesQuery(categoryId, null);
+        var sortedArticles = SortArticles(query, isAscending).Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+        var totalCount = query.Count();
+
+        var articlePaginationDto = new ArticlePaginationDto
+        {
+            Articles = sortedArticles,
+            CategoryId = categoryId,
+            CurrentPage = currentPage,
+            PageSize = pageSize,
+            TotalCount = totalCount,
+            IsAscending = isAscending
+        };
+
+        return new DataResult<ArticlePaginationDto>(ResultStatus.Success, articlePaginationDto);
+    }
+
+    public IDataResult<ArticlePaginationDto> Search(string keyword, int currentPage = 1, int pageSize = 3, bool isAscending = false)
+    {
+        pageSize = pageSize > 20 ? 20 : pageSize;
+
+        var query = GetArticlesQuery(null, keyword);
+        var sortedArticles = SortArticles(query, isAscending).Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+
+        var totalCount = query.Count();
+
+        var articlePaginationDto = new ArticlePaginationDto
+        {
+            Articles = sortedArticles,
+            CurrentPage = currentPage,
+            PageSize = pageSize,
+            TotalCount = totalCount,
+            IsAscending = isAscending
+        };
+
+        return new DataResult<ArticlePaginationDto>(ResultStatus.Success, articlePaginationDto);
+    }
+
+    public async Task<IDataResult<ArticleDto>> GetArticleAsync(Guid articleId)
+    {
+        var query = _unitOfWork.GetRepository<Article>().Query();
+        var article = await query
+            .Where(a => !a.IsDeleted && a.Id == articleId)
+            .Include(a => a.Category)
+            .Include(a => a.User)
+            .Include(u => u.Image).FirstOrDefaultAsync();
+
+        if (article == null)
+            return new DataResult<ArticleDto>(ResultStatus.Error, Messages.Article.NotFound(false));
+
+        var articleDto = _mapper.Map<ArticleDto>(article);
+        return new DataResult<ArticleDto>(ResultStatus.Success, articleDto);
+
+
+    }
+
+
+
+
+
+    private IQueryable<Article> GetArticlesQuery(Guid? categoryId, string keyword = null)
+    {
+        var query = _unitOfWork.GetRepository<Article>().Query().Where(a => !a.IsDeleted);
+
+        if (categoryId.HasValue)
+            query = query.Where(a => a.CategoryId == categoryId);
+
+        if (!string.IsNullOrEmpty(keyword))
+            query = query.Where(a => a.Title.Contains(keyword) || a.Content.Contains(keyword) || a.Category.Name.Contains(keyword));
+
+        return query.Include(a => a.Category).Include(a => a.Image).Include(a => a.User);
+    }
+
+
+    private IQueryable<Article> SortArticles(IQueryable<Article> articles, bool isAscending, int currentPage = 1, int pageSize = 3)
+    {
+        return isAscending ?
+            articles.OrderBy(a => a.CreatedDate) :
+            articles.OrderByDescending(a => a.CreatedDate);
+    }
+
 
     // Get
-    private async Task<IDataResult<Article>> GetArticleAsync(Guid articleId)
+    private async Task<IDataResult<Article>> GetByArticleAsync(Guid articleId)
     {
         var article = await _unitOfWork.GetRepository<Article>().GetAsync(a => !a.IsDeleted && a.Id == articleId, a => a.Category, a => a.Image);
 
