@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using EasyBlog.Core.Entities.Abstract;
+using Microsoft.AspNetCore.Identity;
 
 namespace EasyBlog.Entity.Entities;
 
-public class AppUserRole : IdentityUserRole<Guid>
+public class AppUserRole : IdentityUserRole<Guid>, IEntityBase
 {
 }

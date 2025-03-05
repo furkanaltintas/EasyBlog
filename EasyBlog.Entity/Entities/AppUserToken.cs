@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using EasyBlog.Core.Entities.Abstract;
+using Microsoft.AspNetCore.Identity;
 
 namespace EasyBlog.Entity.Entities;
 
-public class AppUserToken : IdentityUserToken<Guid>
+public class AppUserToken : IdentityUserToken<Guid>, IEntityBase
 {
 }

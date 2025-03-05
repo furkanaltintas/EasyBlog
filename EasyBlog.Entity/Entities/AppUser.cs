@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using EasyBlog.Core.Entities.Abstract;
+using Microsoft.AspNetCore.Identity;
 
 namespace EasyBlog.Entity.Entities;
 
-public class AppUser : IdentityUser<Guid>
+public class AppUser : IdentityUser<Guid>, IEntityBase
 {
     public Guid? ImageId { get; set; }
 
