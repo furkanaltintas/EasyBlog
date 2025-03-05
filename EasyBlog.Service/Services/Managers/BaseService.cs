@@ -5,26 +5,32 @@ namespace EasyBlog.Service.Services.Managers;
 public class BaseService : IBaseService
 {
     public BaseService(
+        IUserService userService,
+        IRoleService roleService,
         IAuthService authService,
+        IImageService imageService,
         IArticleService articleService,
         ICategoryService categoryService,
-        IUserService userService,
-        IRoleService roleService)
+        IDashboardService dashboardService,
+        IUserProfileService userProfileService,
+        IUserRegistrationService userRegistrationService)
     {
+        ImageService = imageService;
+        UserService = userService;
+        RoleService = roleService;
         AuthService = authService;
         ArticleService = articleService;
         CategoryService = categoryService;
-        UserService = userService;
-        RoleService = roleService;
+        DashboardService = dashboardService;
     }
 
-    public IAuthService AuthService { get; }
-
-    public IArticleService ArticleService { get; }
-
-    public ICategoryService CategoryService { get; }
-
     public IUserService UserService { get; }
-
     public IRoleService RoleService { get; }
+    public IAuthService AuthService { get; }
+    public IImageService ImageService { get; }
+    public IArticleService ArticleService { get; }
+    public ICategoryService CategoryService { get; }
+    public IDashboardService DashboardService { get; }
+    public IUserProfileService UserProfileService { get; }
+    public IUserRegistrationService UserRegistrationService { get; }   
 }
