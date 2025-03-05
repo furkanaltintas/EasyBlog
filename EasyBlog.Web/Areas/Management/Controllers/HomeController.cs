@@ -1,5 +1,4 @@
-﻿using EasyBlog.Service.Services.Concretes;
-using EasyBlog.Service.Services.Managers;
+﻿using EasyBlog.Service.Services.Managers;
 using EasyBlog.Web.Areas.Management.Controllers.Base;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
