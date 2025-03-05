@@ -17,7 +17,7 @@ public class HomeController : BaseController
     }
 
     [Route("v1")]
-    public async Task<IActionResult> Index()
+    public IActionResult Index()
     {
         return View();
     }

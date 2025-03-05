@@ -50,7 +50,7 @@ public class AuthController : BaseController
 
     [HttpGet(RouteConstants.AccessDenied)]
     [Authorize]
-    public async Task<IActionResult> AccessDenied()
+    public IActionResult AccessDenied()
     {
         return View();
     }
