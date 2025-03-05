@@ -19,9 +19,6 @@ public static class DataExtensions
         #region Connection
         services.AddScoped<AuditInterceptor>();
 
-        //builder.Services.AddDbContext<AppDbContext>(options =>
-        //    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
         services.AddDbContext<AppDbContext>((serviceProvider, options) =>
         {
             options

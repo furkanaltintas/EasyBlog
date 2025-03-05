@@ -14,7 +14,7 @@ public class Repository<T> : IRepository<T> where T : class, IEntityBase, new()
     private DbSet<T> Table { get => _dbContext.Set<T>(); }
 
 
-    public async Task<T> GetAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includeProperties)
+    public async Task<T> GetAsync(Expression<Func<T, bool>>? predicate = null, params Expression<Func<T, object>>[] includeProperties)
     {
         IQueryable<T> query = Table.Where(predicate);
 
@@ -29,9 +29,9 @@ public class Repository<T> : IRepository<T> where T : class, IEntityBase, new()
 
     public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate) => await Table.AnyAsync(predicate);
 
-    public async Task<int> CountAsync(Expression<Func<T, bool>> predicate = null) => await Table.CountAsync(predicate);
+    public async Task<int> CountAsync(Expression<Func<T, bool>>? predicate = null) => await Table.CountAsync(predicate ?? (x => true));
 
-    public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null, params Expression<Func<T, object>>[] includeProperties)
+    public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>>? predicate = null, params Expression<Func<T, object>>[] includeProperties)
     {
         IQueryable<T> query = Table;
         if (predicate != null)

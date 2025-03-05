@@ -19,6 +19,7 @@ public static class MicrosoftDependencies
         //services.AddScoped<IFileNameHelper, FileNameHelper>();
         //services.AddScoped<IServiceManager, ServiceManager>();
 
+        services.AddHttpContextAccessor();
 
         services.AddScoped<IImageUploader, ImageUploader>();
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
