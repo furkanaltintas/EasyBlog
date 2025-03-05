@@ -5,11 +5,10 @@
 }
 
 <div class="container-xxl flex-grow-1 container-p-y">
-    <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Kategori Yönetimi /</span> Kategoriler</h4>
+    @await Component.InvokeAsync("DashboardTitle")
     <div class="card">
-        <h5 class="card-header">Kategoriler</h5>
-        <div class="table-responsive text-nowrap">
-            <table class="table table-bordered" id="categoriesTable" width="100%" cellspacing="0">
+        <div class="table-responsive text-nowrap m-5">
+            <table class="table table-bordered" id="easyTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
                         <th>Başlık</th>
@@ -60,5 +59,5 @@
 </div>
 
 @section Scripts {
-    <script src="~/js/categoryIndex.js" type="application/ecmascript"></script>
+    <script src="~/js/tableIndex.js" type="application/ecmascript"></script>
 }

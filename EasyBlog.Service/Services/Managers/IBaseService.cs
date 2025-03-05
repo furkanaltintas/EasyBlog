@@ -12,5 +12,6 @@ public interface IBaseService
     ICategoryService CategoryService { get; }
     IDashboardService DashboardService { get; }
     IUserProfileService UserProfileService { get; }
+    IArticleVisitorService ArticleVisitorService { get; }
     IUserRegistrationService UserRegistrationService { get; }
 }

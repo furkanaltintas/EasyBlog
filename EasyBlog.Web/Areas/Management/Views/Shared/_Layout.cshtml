@@ -122,14 +122,6 @@
                         </a>
                     </li>
 
-                    <li class="menu-item @(UrlHelper.IsActive("Menu", ViewContext))">
-                        <a asp-area="Management" asp-controller="Menu" asp-action="Index" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-layout"></i>
-                            <div data-i18n="Menu">Navigasyon Yönetimi</div>
-                        </a>
-                    </li>
-
-
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">İçerik Yönetimi</span></li>
                     <li class="menu-item @(UrlHelper.IsActive("Article", ViewContext))">
                         <a asp-area="Management" asp-controller="Article" asp-action="Index" class="menu-link">
@@ -240,16 +232,6 @@
                         <!-- /Search -->
 
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
-                            <!-- Place this tag where you want the button to render. -->
-                            <li class="nav-item lh-1 me-3">
-                                <a class="github-button"
-                                   href="https://github.com/themeselection/sneat-html-admin-template-free"
-                                   data-icon="octicon-star"
-                                   data-size="large"
-                                   data-show-count="true"
-                                   aria-label="Star themeselection/sneat-html-admin-template-free on GitHub">Star</a>
-                            </li>
-
                             <!-- User -->
                             @await Component.InvokeAsync("DashboardHeader")
                             <!--/ User -->
@@ -268,23 +250,8 @@
                         <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
                             <div class="mb-2 mb-md-0">
                                 ©
-                                <script>
-                                    document.write(new Date().getFullYear());
-                                </script>
-                                , made with ❤️ by
-                                <a href="https://themeselection.com" target="_blank" class="footer-link fw-bolder">ThemeSelection</a>
-                            </div>
-                            <div>
-                                <a href="https://themeselection.com/license/" class="footer-link me-4" target="_blank">License</a>
-                                <a href="https://themeselection.com/" target="_blank" class="footer-link me-4">More Themes</a>
-
-                                <a href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
-                                   target="_blank"
-                                   class="footer-link me-4">Documentation</a>
-
-                                <a href="https://github.com/themeselection/sneat-html-admin-template-free/issues"
-                                   target="_blank"
-                                   class="footer-link me-4">Support</a>
+                                @DateTime.Now.Year
+                                <a asp-controller="Home" class="footer-link fw-normal">EasyBlog</a>
                             </div>
                         </div>
                     </footer>

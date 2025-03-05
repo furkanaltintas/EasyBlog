@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    var yearlyArticlesUrl = app.Urls.yearlyArticlesUrl
+    var yearlyArticlesUrl = app.Urls.yearlyArticlesUrl;
     var totalArticlesCountUrl = app.Urls.totalArticlesCountUrl;
     var totalCategoriesCountUrl = app.Urls.totalCategoriesCountUrl;
     var totalUsersCountUrl = app.Urls.totalUsersCountUrl;
@@ -9,14 +9,12 @@
         url: totalArticlesCountUrl,
         dataType: "json",
         success: function (data) {
-            $("h3#totalArticleCount").append(data);
+            $("h3#totalArticleCountUrl").append(data);
         },
         error: function () {
             toastr.error("Makale analizleri yüklenirken hata oluştu!", "Hata");
         }
     });
-
-
 
     $.ajax({
         type: "GET",
@@ -29,8 +27,6 @@
             toastr.error("Kategori analizleri yüklenirken hata oluştu!", "Hata");
         }
     });
-
-
 
     $.ajax({
         type: "GET",

@@ -11,7 +11,7 @@ using NToastNotify;
 
 namespace EasyBlog.Web.Areas.Management.Controllers;
 
-[Authorize]
+[Authorize(Roles = $"{RoleConsts.SuperAdmin}")]
 [Route(RouteConstants.User)]
 public class UserController : BaseController
 {

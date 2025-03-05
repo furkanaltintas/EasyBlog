@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EasyBlog.Web.ViewComponents;
 
-public class HomeCategoriesViewComponent : ViewComponent
+public class WelcomeManagementViewComponent : ViewComponent
 {
     private readonly IBaseService _service;
 
-    public HomeCategoriesViewComponent(IBaseService service)
+    public WelcomeManagementViewComponent(IBaseService service)
     {
         _service = service;
     }
@@ -15,7 +15,7 @@ public class HomeCategoriesViewComponent : ViewComponent
 
     public async Task<IViewComponentResult> InvokeAsync()
     {
-        var result = await _service.CategoryService.GetAllCategoriesNonDeletedAsync();
+        var result = await _service.UserService.GetUserAsync();
 
         return View(result.Data);
     }

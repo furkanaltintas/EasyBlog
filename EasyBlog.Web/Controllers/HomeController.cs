@@ -1,18 +1,19 @@
 using EasyBlog.Core.Utilities.Results.ComplexTypes;
+using EasyBlog.Entity.Entities;
 using EasyBlog.Service.Services.Managers;
-using EasyBlog.Web.Areas.Management.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace EasyBlog.Web.Controllers;
 
 public class HomeController : Controller
 {
-    private IBaseService _serviceManager;
+    private readonly IBaseService _serviceManager;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public HomeController(IBaseService serviceManager)
+    public HomeController(IBaseService serviceManager, IHttpContextAccessor httpContextAccessor)
     {
         _serviceManager = serviceManager;
+        _httpContextAccessor = httpContextAccessor;
     }
 
     public IActionResult Index(Guid? categoryId, int currentPage = 1, int pageSize = 3, bool isAscending = false, string keyword = null)
@@ -38,9 +39,9 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Detail(Guid articleId)
     {
-        var result = await _serviceManager.ArticleService.GetArticleAsync(articleId);
+        var articleResult = await _serviceManager.ArticleService.GetArticleAsync(articleId);
+        await _serviceManager.ArticleVisitorService.CreateArticleVisitorAsync(articleId);
 
-        if (result.ResultStatus == ResultStatus.Success) return View(result.Data);
-        return RedirectToAction(nameof(Index));
+        return View(articleResult.Data);
     }
 }

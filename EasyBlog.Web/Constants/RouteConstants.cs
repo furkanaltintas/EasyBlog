@@ -10,11 +10,12 @@ public static class RouteConstants
     public const string Article = "makaleler";
     public const string Category = "kategoriler";
     public const string User = "kullanicilar";
+    public const string Role = "roller";
 
 
 
     // Auth
-    public const string Auth = "v1.432025";
+    public const string Auth = "v1";
     public const string Login = "giris";
     public const string Logout = "cikis";
     public const string AccessDenied = "erisim-engellendi";

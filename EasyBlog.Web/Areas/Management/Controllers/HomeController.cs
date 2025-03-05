@@ -16,24 +16,17 @@ public class HomeController : BaseController
     }
 
     [Route("v1")]
-    public IActionResult Index()
-    {
-        return View();
-    }
+    public IActionResult Index() => View();
 
-    [Route("yearlyarticlecounts")]
-    public async Task<IActionResult> YearlyArticleCounts()
-    {
-        var count = await _serviceManager.DashboardService.GetYearlyArticleCounts();
-        return Json(JsonConvert.SerializeObject(count));
-    }
+    [HttpGet("yearlyarticlecounts")]
+    public async Task<IActionResult> YearlyArticleCounts() => Json(JsonConvert.SerializeObject(await _serviceManager.DashboardService.GetYearlyArticleCounts()));
 
-    [Route("totalarticlecount")]
+    [HttpGet("totalarticlecount")]
     public async Task<IActionResult> TotalArticleCount() => Json(await _serviceManager.DashboardService.GetTotalArticleCount());
 
-    [Route("totalcategorycount")]
+    [HttpGet("totalcategorycount")]
     public async Task<IActionResult> TotalCategoryCount() => Json(await _serviceManager.DashboardService.GetTotalCategoryCount());
 
-    [Route("totalusercount")]
+    [HttpGet("totalusercount")]
     public async Task<IActionResult> TotalUserCount() => Json(await _serviceManager.DashboardService.GetTotalUserCount());
 }

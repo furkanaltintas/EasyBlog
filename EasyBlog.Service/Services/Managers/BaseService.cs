@@ -13,15 +13,17 @@ public class BaseService : IBaseService
         ICategoryService categoryService,
         IDashboardService dashboardService,
         IUserProfileService userProfileService,
+        IArticleVisitorService articleVisitorService,
         IUserRegistrationService userRegistrationService)
     {
-        ImageService = imageService;
         UserService = userService;
         RoleService = roleService;
         AuthService = authService;
+        ImageService = imageService;
         ArticleService = articleService;
         CategoryService = categoryService;
         DashboardService = dashboardService;
+        ArticleVisitorService = articleVisitorService;
     }
 
     public IUserService UserService { get; }
@@ -32,5 +34,6 @@ public class BaseService : IBaseService
     public ICategoryService CategoryService { get; }
     public IDashboardService DashboardService { get; }
     public IUserProfileService UserProfileService { get; }
-    public IUserRegistrationService UserRegistrationService { get; }   
+    public IArticleVisitorService ArticleVisitorService { get; }
+    public IUserRegistrationService UserRegistrationService { get; }
 }

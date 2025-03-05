@@ -13,19 +13,21 @@ public class LowercaseUrlMiddleware
 
     public async Task Invoke(HttpContext context)
     {
-        string path = context.Request.Path.Value!;
+        // Jquery kodlarını bozuyor
 
-        if (!string.IsNullOrEmpty(path) && path != path.ToLower())
-        {
-            string builder = new UriBuilder(context.Request.GetEncodedUrl())
-            {
-                Path = path.ToLower(),
-                Query = context.Request.QueryString.ToString()
-            }.ToString();
+        //string path = context.Request.Path.Value!;
 
-            context.Response.Redirect(builder, true);
-            return;
-        }
+        //if (!string.IsNullOrEmpty(path) && path != path.ToLower())
+        //{
+        //    string builder = new UriBuilder(context.Request.GetEncodedUrl())
+        //    {
+        //        Path = path.ToLower(),
+        //        Query = context.Request.QueryString.ToString()
+        //    }.ToString();
+
+        //    context.Response.Redirect(builder, true);
+        //    return;
+        //}
 
         await _next(context);
     }

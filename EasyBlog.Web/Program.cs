@@ -9,6 +9,7 @@ using EasyBlog.Service.Describers;
 using EasyBlog.Service.Extensions;
 using EasyBlog.Service.Services.Concretes;
 using EasyBlog.Service.ValidationRules.FluentValidation;
+using EasyBlog.Web.Filters;
 using EasyBlog.Web.Middleware;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
@@ -77,7 +78,10 @@ builder.Services.ConfigureApplicationCookie(configure =>
 
 #region ToastNotification
 builder.Services
-    .AddControllersWithViews()
+    .AddControllersWithViews(options =>
+    {
+        options.Filters.Add<ArticleVisitorFilter>();
+    })
     .AddNToastNotifyToastr(new()
     {
         PositionClass = ToastPositions.TopRight,
