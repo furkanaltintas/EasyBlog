@@ -64,4 +64,6 @@ public class Repository<T> : IRepository<T> where T : class, IEntityBase, new()
     }
 
     public void NullException(T entity) { if (entity == null) throw new ArgumentNullException(nameof(entity)); }
+
+    public IQueryable<T> Query() => Table.AsQueryable();
 }
